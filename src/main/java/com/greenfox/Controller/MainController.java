@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class MainController {
 
-  @Autowired
-  Logic logic;
+  Logic logic = new Logic();
 
-  @ExceptionHandler(Exception.class)
-  public String handleAllExceptions() {
-    return "Error happend";
-  }
+//  @ExceptionHandler(Exception.class)
+//  public String handleAllExceptions() {
+//    return "Error happend";
+//  }
 
   @RequestMapping("/")
   public String home() {

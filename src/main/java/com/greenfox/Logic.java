@@ -9,7 +9,8 @@ import java.time.LocalTime;
 public class Logic {
 
   public String getLogMessage(String path) {
-    return LocalDate.now().toString() + " " + LocalTime.now().toString() + " INFO" + " Request " + path;
+
+    return LocalDate.now().toString() + " " + LocalTime.now().toString() + " INFO Request " + path;
   }
 
 }
