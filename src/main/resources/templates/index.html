@@ -25,10 +25,10 @@
 <h2>Previous messages</h2>
 <table th:each="m : ${message}">
   <tr>
-  <td th:text="'User: ' + ${m.getFelhasznalo()}"></td>
+  <td th:text="'User: ' + ${m.getUsername()}"></td>
   </tr>
   <tr>
-    <td th:text="'Message: ' + ${m.getMessage()}"></td>
+    <td th:text="'Message: ' + ${m.getText()}"></td>
     <hr/>
   </tr>
 </table>

@@ -1,9 +1,11 @@
 package com.greenfox.Model;
 
-import com.greenfox.Repository.MessageRepository;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 /**
@@ -15,24 +17,31 @@ public class Message {
 
   @Id
   long id;
+  String username;
+  String text;
+  Timestamp timestamp;
 
-  String message;
-  String felhasznalo;
-  Timestamp created;
 
   public Message(String message, String felhasznalo) {
     this.id = (int) (Math.random() * 8999999 + 1000000);
-    this.message = message;
-    this.felhasznalo = felhasznalo;
-    this.created = new Timestamp(System.currentTimeMillis());
+    this.username = felhasznalo;
+    this.text = message;
+    this.timestamp = new Timestamp(System.currentTimeMillis());
   }
 
-  public Timestamp getCreated() {
-    return created;
+  public Message(long id, String username, String text, Timestamp timestamp) {
+    this.id = id;
+    this.username = username;
+    this.text = text;
+    this.timestamp = timestamp;
   }
 
-  public void setCreated(Timestamp created) {
-    this.created = created;
+  public Timestamp getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(Timestamp timestamp) {
+    this.timestamp = timestamp;
   }
 
   public long getId() {
@@ -43,19 +52,23 @@ public class Message {
     this.id = (int) (Math.random() * 8999999 + 1000000);
   }
 
-  public String getMessage() {
-    return message;
+  public String getUsername() {
+    return username;
   }
 
-  public void setMessage(String message) {
-    this.message = message;
+  public void setUsername(String username) {
+    this.username = username;
   }
 
-  public String getFelhasznalo() {
-    return felhasznalo;
+  public String getText() {
+    return text;
   }
 
-  public void setFelhasznalo(String felhasznalo) {
-    this.felhasznalo = felhasznalo;
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public void setId(long id) {
+    this.id = id;
   }
 }

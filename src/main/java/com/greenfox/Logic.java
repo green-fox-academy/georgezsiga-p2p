@@ -1,6 +1,7 @@
 package com.greenfox;
 
 import com.greenfox.Model.Felhasznalo;
+import com.greenfox.Model.Message;
 import com.greenfox.Repository.MessageRepository;
 import com.greenfox.Repository.UserRepository;
 import java.sql.Timestamp;
@@ -48,4 +49,28 @@ public class Logic {
     userRepository.findFelhasznaloByUsername(username).setLastActive();
     userRepository.save(userRepository.findByUsername(username));
   }
+
+  public String checkAllFields(Message message) {
+    if (message.getId() != 0 && message.getText() != null && message.getTimestamp() != null && message.getUsername() != null) {
+      return "ok";
+    }
+    System.out.println("in");
+    String errorString = "Missing field(s): ";
+    if (message.getId() == 0) {
+      System.out.println("1");
+      errorString += " id;";
+    } else if (message.getText() == null) {
+      System.out.println("2");
+      errorString += " text;";
+    } else if (message.getTimestamp() == null) {
+      System.out.println("3");
+      errorString += " timestamp;";
+    } else if (message.getUsername() == null) {
+      System.out.println("4");
+      errorString += " username;";
+    }
+    System.out.println("6");
+    return errorString;
+  }
+
 }
