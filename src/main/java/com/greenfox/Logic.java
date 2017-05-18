@@ -31,12 +31,21 @@ public class Logic {
     }
   }
 
-
   public Boolean checkId(MessageRepository messageRepository, long id) {
     if (messageRepository.findOne(id) == null) {
       return false;
     } else {
       return true;
     }
+  }
+
+  public void updateLastActive(UserRepository userRepository, long id) {
+    userRepository.findFelhasznaloById(id).setLastActive();
+    userRepository.save(userRepository.findFelhasznaloById(id));
+  }
+
+  public void updateLastActive(UserRepository userRepository, String username) {
+    userRepository.findFelhasznaloByUsername(username).setLastActive();
+    userRepository.save(userRepository.findByUsername(username));
   }
 }

@@ -16,10 +16,6 @@ public interface UserRepository extends CrudRepository<Felhasznalo, Long> {
 
   List<Felhasznalo> findByUsername(String username);
 
-  Boolean findFirstByUsernameEquals(String username);
-
-  Felhasznalo findById(long id);
-
   Felhasznalo findFelhasznaloByUsername(@Param("username") String username);
 
   Felhasznalo findFelhasznaloById(@Param("id") Long id);

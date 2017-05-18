@@ -1,12 +1,11 @@
 package com.greenfox.Controller;
 
 import com.greenfox.Logic;
-import com.greenfox.Model.Error;
+import com.greenfox.Model.ErrorMessages;
 import com.greenfox.Model.Felhasznalo;
 import com.greenfox.Model.Message;
 import com.greenfox.Repository.MessageRepository;
 import com.greenfox.Repository.UserRepository;
-import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,16 +35,21 @@ public class MainController {
   }
 
   @RequestMapping("/")
-  public String home(@RequestParam(value = "error", required = false) String error, Model message, Model model, Model id) {
+  public String home(@RequestParam(value = "error", required = false) String error, Model message,
+      Model model, Model id) {
     System.out.println(logic.getLogMessage("/"));
-if (logic.userTimeout(userRepository)) {
-  return "redirect:/enter?error=sessiontimedout";
-} else {
+    if (logic.userTimeout(userRepository)) {
+      return "redirect:/enter?error=sessiontimedout";
+    } else {
       Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
       long id2 = user.getId();
       message.addAttribute("message", messageRepository.findAll());
       model.addAttribute("user", user.getUsername());
       id.addAttribute("id", id2);
+      if (error != null) {
+        error = error.toUpperCase();
+        message.addAttribute("error", ErrorMessages.valueOf(error).toString());
+      }
       return "index";
     }
   }
@@ -54,7 +58,10 @@ if (logic.userTimeout(userRepository)) {
   public String register(@RequestParam(value = "error", required = false) String error,
       Model message) {
     System.out.println(logic.getLogMessage("/enter"));
-//    message.addAttribute("error", Error.valueOf(error).getMessage());
+    if (error != null) {
+      error = error.toUpperCase();
+      message.addAttribute("error", ErrorMessages.valueOf(error).toString());
+    }
     return "register";
   }
 
@@ -65,8 +72,7 @@ if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=nousername";
     }
     if (userRepository.findFelhasznaloByUsername(username) != null) {
-      userRepository.findFelhasznaloByUsername(username).setLastActive();
-      userRepository.save(userRepository.findByUsername(username));
+      logic.updateLastActive(userRepository, username);
       return "redirect:/";
     }
     userRepository.save(new Felhasznalo(username));
@@ -81,8 +87,7 @@ if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=nousername";
     }
     userRepository.findFelhasznaloById(id).setUsername(username);
-    userRepository.findFelhasznaloById(id).setLastActive();
-    userRepository.save(userRepository.findFelhasznaloById(id));
+    logic.updateLastActive(userRepository, id);
     return "redirect:/";
   }
 
@@ -99,8 +104,7 @@ if (logic.userTimeout(userRepository)) {
       message1.generateNewId();
     }
     messageRepository.save(message1);
-    userRepository.findFelhasznaloById(id).setLastActive();
-    userRepository.save(userRepository.findFelhasznaloById(id));
+    logic.updateLastActive(userRepository, id);
     return "redirect:/";
   }
 }

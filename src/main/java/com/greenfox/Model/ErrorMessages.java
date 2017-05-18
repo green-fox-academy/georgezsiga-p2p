@@ -3,7 +3,7 @@ package com.greenfox.Model;
 /**
  * Created by georgezsiga on 5/18/17.
  */
-public enum Error {
+public enum ErrorMessages {
 
   NOUSERNAME("nousername", "The username field is empty"),
   SESSIONTIMEDOUT("sessiontimedout", "Your session timed out, please log in again!"),
@@ -12,7 +12,7 @@ public enum Error {
   private final String name;
   private final String message;
 
-  Error(String name, String message) {
+  ErrorMessages(String name, String message) {
     this.name = name;
     this.message = message;
   }
@@ -22,6 +22,11 @@ public enum Error {
   }
 
   public String getMessage() {
+    return message;
+  }
+
+  @Override
+  public String toString() {
     return message;
   }
 }
