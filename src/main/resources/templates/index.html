@@ -7,5 +7,8 @@
 </head>
 <body>
 <h1>George`s peer to peer chat program</h1>
+<form action="/updateform" method="post" enctype="application/x-www-form-urlencoded">
+  Your Username: <input title="username" type="text" name="username" th:placeholder="${user}" autocomplete="off" required="required"/><input title="id" type="hidden" name="id" th:value="${id}"/> <input type="submit" value="update"/>
+</form>
 </body>
 </html>
