@@ -3,7 +3,10 @@ package com.greenfox.Controller;
 import com.greenfox.Logic;
 import com.greenfox.Model.Error;
 import com.greenfox.Model.Felhasznalo;
+import com.greenfox.Model.Message;
+import com.greenfox.Repository.MessageRepository;
 import com.greenfox.Repository.UserRepository;
+import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +23,9 @@ public class MainController {
   @Autowired
   UserRepository userRepository;
 
+  @Autowired
+  MessageRepository messageRepository;
+
   Logic logic = new Logic();
 
   @ExceptionHandler(Exception.class)
@@ -30,15 +36,15 @@ public class MainController {
   }
 
   @RequestMapping("/")
-  public String home(@RequestParam(value = "username", required = false) String username,
-      Model model, Model id) {
+  public String home(@RequestParam(value = "error", required = false) String error, Model message, Model model, Model id) {
     System.out.println(logic.getLogMessage("/"));
-    if (username == null) {
-      return "redirect:/enter";
-    } else {
-      model.addAttribute("user", username);
-      Felhasznalo user = userRepository.findFelhasznaloByUsername(username);
+if (logic.userTimeout(userRepository)) {
+  return "redirect:/enter?error=sessiontimedout";
+} else {
+      Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
       long id2 = user.getId();
+      message.addAttribute("message", messageRepository.findAll());
+      model.addAttribute("user", user.getUsername());
       id.addAttribute("id", id2);
       return "index";
     }
@@ -59,10 +65,12 @@ public class MainController {
       return "redirect:/enter?error=nousername";
     }
     if (userRepository.findFelhasznaloByUsername(username) != null) {
-      return "redirect:/?username=" + username;
+      userRepository.findFelhasznaloByUsername(username).setLastActive();
+      userRepository.save(userRepository.findByUsername(username));
+      return "redirect:/";
     }
     userRepository.save(new Felhasznalo(username));
-    return "redirect:/?username=" + username;
+    return "redirect:/";
   }
 
   @RequestMapping("/updateform")
@@ -70,11 +78,29 @@ public class MainController {
       @RequestParam(value = "id") long id) {
     System.out.println(logic.getLogMessage("/updateForm"));
     if (username.equals("")) {
-      System.out.println("null");
       return "redirect:/enter?error=nousername";
     }
-      userRepository.delete(id);
-    userRepository.save(new Felhasznalo(username));
-    return "redirect:/?username=" + username;
+    userRepository.findFelhasznaloById(id).setUsername(username);
+    userRepository.findFelhasznaloById(id).setLastActive();
+    userRepository.save(userRepository.findFelhasznaloById(id));
+    return "redirect:/";
+  }
+
+  @RequestMapping("/newmessageform")
+  public String newMessageForm(@RequestParam(value = "message", required = false) String message,
+      @RequestParam(value = "id") long id) {
+    System.out.println(logic.getLogMessage("/updateForm"));
+    if (message.equals("")) {
+      System.out.println("null");
+      return "redirect:/?error=nomessage";
+    }
+    Message message1 = new Message(message, userRepository.findFelhasznaloById(id).getUsername());
+    while (logic.checkId(messageRepository, message1.getId())) {
+      message1.generateNewId();
+    }
+    messageRepository.save(message1);
+    userRepository.findFelhasznaloById(id).setLastActive();
+    userRepository.save(userRepository.findFelhasznaloById(id));
+    return "redirect:/";
   }
 }

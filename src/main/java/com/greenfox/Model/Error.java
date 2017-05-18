@@ -5,7 +5,9 @@ package com.greenfox.Model;
  */
 public enum Error {
 
-  NOUSERNAME("nousername", "The username field is empty");
+  NOUSERNAME("nousername", "The username field is empty"),
+  SESSIONTIMEDOUT("sessiontimedout", "Your session timed out, please log in again!"),
+  NOMESSAGE("nomessage" , "You need to type in something to send");
 
   private final String name;
   private final String message;

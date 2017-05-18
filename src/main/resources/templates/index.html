@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" http-equiv="refresh" content="120"/>
   <title>George`s peer to peer chat program</title>
   <link rel="stylesheet" type="text/css" href="styles.css"/>
 </head>
@@ -10,5 +10,25 @@
 <form action="/updateform" method="post" enctype="application/x-www-form-urlencoded">
   Your Username: <input title="username" type="text" name="username" th:placeholder="${user}" autocomplete="off" required="required"/><input title="id" type="hidden" name="id" th:value="${id}"/> <input type="submit" value="update"/>
 </form>
+<br/>
+<a href="/enter">Log in with an other user</a>
+<br/>
+<br/>
+<form action="/newmessageform" method="post" enctype="application/x-www-form-urlencoded">
+  <input title="id" type="hidden" name="id" th:value="${id}"/>
+  <textarea name="message" title="message" cols="31" rows="3" autocomplete="off" required="required" placeholder="Type your message here"></textarea>
+  <br/>
+  <input type="submit" value="Send"/>
+</form>
+<br/>
+<h2>Previous messages</h2>
+<table th:each="m : ${message}">
+  <tr>
+  <td th:text="'User: ' + ${m.getFelhasznalo()}"></td>
+  </tr>
+  <tr>
+    <td th:text="'Message: ' + ${m.getMessage()}"></td>
+  </tr>
+</table>
 </body>
 </html>
