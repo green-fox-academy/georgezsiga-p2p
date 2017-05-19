@@ -9,6 +9,7 @@ import com.greenfox.Model.Message;
 import com.greenfox.Model.StatusOk;
 import com.greenfox.Repository.MessageRepository;
 import com.greenfox.Repository.UserRepository;
+import java.util.Map;
 import javax.swing.JEditorPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,6 +50,14 @@ public class MainController {
   public String home(@RequestParam(value = "error", required = false) String error, Model message,
       Model model, Model id) {
     System.out.println(logic.getLogMessage("/"));
+
+    Map<String, String> env = System.getenv();
+    for (String envName : env.keySet()) {
+      System.out.format("%s=%s%n",
+          envName,
+          env.get(envName));
+    }
+
     if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=sessiontimedout";
     } else {
@@ -128,7 +137,8 @@ public class MainController {
     }
     messageRepository.save(message1);
     IncomingMessage incom = new IncomingMessage(message1);
-    incom.getClient().setId("george");
+    Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
+    incom.getClient().setId(user.getUsername());
     try {
       String jsonInString = mapper.writeValueAsString(incom);
       System.out.println(jsonInString);
@@ -137,8 +147,8 @@ public class MainController {
       System.out.println("exception");
     }
 
-    StatusOk newMessage = restTemplate.postForObject(viktor, incom, StatusOk.class);
-    StatusOk newMessage2 = restTemplate.postForObject(patrik, incom, StatusOk.class);
+    restTemplate.postForObject(viktor, incom, StatusOk.class);
+//   StatusOk newMessage =  restTemplate.postForObject(patrik, incom, StatusOk.class);
     logic.updateLastActive(userRepository, id);
     return "redirect:/";
   }
