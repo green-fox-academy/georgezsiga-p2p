@@ -16,6 +16,11 @@ public class IncomingMessage {
   public IncomingMessage() {
   }
 
+  public IncomingMessage(Message message) {
+    this.message = message;
+    this.client = new Client();
+  }
+
   public Message getMessage() {
     return message;
   }

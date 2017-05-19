@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
  * Created by georgezsiga on 5/18/17.
  */
 
-@NoArgsConstructor
 public class Client {
 
 
   String id;
+
+  public Client() {
+  }
 
   public String getId() {
     return id;

@@ -8,15 +8,19 @@ import com.greenfox.Model.Status;
 import com.greenfox.Model.StatusError;
 import com.greenfox.Model.StatusOk;
 import com.greenfox.Repository.MessageRepository;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Time;
 import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -27,16 +31,20 @@ import org.springframework.web.client.RestTemplate;
 public class RestController {
 
   @Autowired
+  MainController mainController;
+
+  @Autowired
   MessageRepository messageRepository;
 
   Logic logic = new Logic();
-  String url = "localhost8080/api/message/received";
+  String url = "https://p2p-chat-seed0forever.herokuapp.com/api/message/receive";
   RestTemplate restTemplate = new RestTemplate();
 
   StatusOk statusOk;
   StatusError statusError;
 
-  @ExceptionHandler(Exception.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler({Exception.class, SecurityException.class})
   public String handleAllExceptions(Error a) {
     System.out.println(a.toString());
     System.out.println("error");
@@ -50,21 +58,12 @@ public class RestController {
     String status = logic.checkAllFields(incomingMessage.getMessage());
     if (status.equals("ok")) {
       messageRepository.save(incomingMessage.getMessage());
+      mainController.refresh();
       statusOk = new StatusOk();
       return statusOk;
     }
     statusError = new StatusError(status);
     return statusError;
   }
-
-  @GetMapping("/add")
-  public Message message(@RequestParam(name = "id") Long id, @RequestParam(name="username") String username, @RequestParam(name="text") String text, @RequestParam(name="timestamp") Timestamp timestamp) {
-    System.out.println("hi");
-    Message message = new Message(id, username, text, timestamp);
-    Message newMessage = restTemplate.postForObject(url, message, Message.class);
-    return newMessage;
-  }
-
-
 
 }

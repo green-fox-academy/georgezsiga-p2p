@@ -1,17 +1,22 @@
 package com.greenfox.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.Logic;
 import com.greenfox.Model.ErrorMessages;
 import com.greenfox.Model.Felhasznalo;
+import com.greenfox.Model.IncomingMessage;
 import com.greenfox.Model.Message;
+import com.greenfox.Model.StatusOk;
 import com.greenfox.Repository.MessageRepository;
 import com.greenfox.Repository.UserRepository;
+import javax.swing.JEditorPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by georgezsiga on 5/17/17.
@@ -26,6 +31,12 @@ public class MainController {
   MessageRepository messageRepository;
 
   Logic logic = new Logic();
+
+  ObjectMapper mapper = new ObjectMapper();
+
+  String viktor = "https://chat-p2p.herokuapp.com/api/message/receive";
+  String patrik = "https://phorv1chatapp.herokuapp.com/api/message/receive";
+  RestTemplate restTemplate = new RestTemplate();
 
   @ExceptionHandler(Exception.class)
   public String handleAllExceptions(Exception a) {
@@ -52,6 +63,19 @@ public class MainController {
       }
       return "index";
     }
+  }
+
+  @RequestMapping("/refresh")
+  public String refresh() {
+    System.out.println(logic.getLogMessage("/refresh"));
+    JEditorPane editorPane = new JEditorPane();
+    try {
+      editorPane.setPage("http://localhost8080/");
+    }
+    catch (Exception e) {
+      System.out.println("error");
+    }
+    return "redirect:/test";
   }
 
   @RequestMapping("/enter")
@@ -96,7 +120,6 @@ public class MainController {
       @RequestParam(value = "id") long id) {
     System.out.println(logic.getLogMessage("/updateForm"));
     if (message.equals("")) {
-      System.out.println("null");
       return "redirect:/?error=nomessage";
     }
     Message message1 = new Message(message, userRepository.findFelhasznaloById(id).getUsername());
@@ -104,6 +127,18 @@ public class MainController {
       message1.generateNewId();
     }
     messageRepository.save(message1);
+    IncomingMessage incom = new IncomingMessage(message1);
+    incom.getClient().setId("george");
+    try {
+      String jsonInString = mapper.writeValueAsString(incom);
+      System.out.println(jsonInString);
+    }
+    catch (Exception e) {
+      System.out.println("exception");
+    }
+
+    StatusOk newMessage = restTemplate.postForObject(viktor, incom, StatusOk.class);
+    StatusOk newMessage2 = restTemplate.postForObject(patrik, incom, StatusOk.class);
     logic.updateLastActive(userRepository, id);
     return "redirect:/";
   }

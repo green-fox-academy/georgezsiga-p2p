@@ -1,23 +1,19 @@
 package com.greenfox.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import lombok.NoArgsConstructor;
-
 /**
  * Created by georgezsiga on 5/18/17.
  */
-@Entity
-@NoArgsConstructor
-public class StatusError extends Status {
+public class StatusError implements Status {
 
-  @Id
   String status;
   String message;
 
   public StatusError(String message) {
     this.status = "error";
     this.message = message;
+  }
+
+  public StatusError() {
   }
 
   public String getStatus() {

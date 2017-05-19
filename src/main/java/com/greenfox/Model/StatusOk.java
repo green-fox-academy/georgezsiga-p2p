@@ -1,16 +1,13 @@
 package com.greenfox.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import lombok.NoArgsConstructor;
 
 /**
  * Created by georgezsiga on 5/18/17.
  */
-@Entity
-public class StatusOk extends Status {
 
-  @Id
+public class StatusOk implements Status {
+
+
   String status;
 
   public StatusOk() {
