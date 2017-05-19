@@ -37,7 +37,7 @@ public class RestController {
   MessageRepository messageRepository;
 
   Logic logic = new Logic();
-  String url = "https://p2p-chat-seed0forever.herokuapp.com/api/message/receive";
+  String marci = "https://p2p-chat-seed0forever.herokuapp.com/api/message/receive";
   RestTemplate restTemplate = new RestTemplate();
 
   StatusOk statusOk;
@@ -58,6 +58,7 @@ public class RestController {
     String status = logic.checkAllFields(incomingMessage.getMessage());
     if (status.equals("ok")) {
       messageRepository.save(incomingMessage.getMessage());
+      restTemplate.postForObject(marci, incomingMessage, StatusOk.class);
       mainController.refresh();
       statusOk = new StatusOk();
       return statusOk;
