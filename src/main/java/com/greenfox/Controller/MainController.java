@@ -80,8 +80,7 @@ public class MainController {
     JEditorPane editorPane = new JEditorPane();
     try {
       editorPane.setPage("http://localhost8080/");
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("error");
     }
     return "redirect:/test";
@@ -138,12 +137,12 @@ public class MainController {
     messageRepository.save(message1);
     IncomingMessage incom = new IncomingMessage(message1);
     Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
-    incom.getClient().setId(user.getUsername());
+    incom.getClient().setId(System.getenv("CHAT_APP_UNIQUE_ID"));
+    System.out.println(System.getenv("CHAT_APP_UNIQUE_ID"));
     try {
       String jsonInString = mapper.writeValueAsString(incom);
       System.out.println(jsonInString);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("exception");
     }
 

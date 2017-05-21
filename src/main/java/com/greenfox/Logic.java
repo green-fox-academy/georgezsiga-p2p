@@ -15,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class Logic {
 
 
-  public String getLogMessage(String path) {
+  public String getLogMessage(String path
+//      , String method, String requestData
+  ) {
 
-    return LocalDate.now().toString() + " " + LocalTime.now().toString() + " INFO Request " + path;
+    return LocalDate.now().toString() + " " + LocalTime.now().toString() + " INFO Request " + path
+//        + " " + method + " " + requestData
+        ;
   }
 
   public Boolean userTimeout(UserRepository userRepository) {

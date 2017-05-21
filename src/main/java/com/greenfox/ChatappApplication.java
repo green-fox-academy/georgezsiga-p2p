@@ -1,6 +1,5 @@
 package com.greenfox;
 
-import com.greenfox.Model.Felhasznalo;
 import com.greenfox.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -21,3 +20,5 @@ public class ChatappApplication implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 	}
 }
+//TODO after login, show only the new messages since last login
+//TODO reverse order, new messages on top
