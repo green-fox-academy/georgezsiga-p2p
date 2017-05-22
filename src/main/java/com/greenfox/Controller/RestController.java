@@ -58,8 +58,10 @@ public class RestController {
     System.out.println(logic.getLogMessage("/api/message/receive"));
     String status = logic.checkAllFields(incomingMessage);
     if (status.equals("ok")) {
-      if (incomingMessage.getClient().getId().equals(System.getenv("CHAT_APP_UNIQUE_ID")))
+      if (incomingMessage.getClient().getId().equals(System.getenv("CHAT_APP_UNIQUE_ID"))) {
         return new ResponseEntity<>(statusOk, HttpStatus.UNAUTHORIZED);
+      }
+
       while (logic.checkId(messageRepository, incomingMessage.getMessage().getId())) {
         incomingMessage.getMessage().generateNewId();
       }

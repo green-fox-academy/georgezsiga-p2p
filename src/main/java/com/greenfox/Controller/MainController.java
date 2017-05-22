@@ -51,27 +51,55 @@ public class MainController {
 
   @RequestMapping("/")
   public String home(@RequestParam(value = "error", required = false) String error, Model message,
-      Model model, Model id) {
+      Model model, Model id, Model users) {
     System.out.println(logic.getLogMessage("/"));
-
     Map<String, String> env = System.getenv();
     for (String envName : env.keySet()) {
       System.out.format("%s=%s%n",
           envName,
           env.get(envName));
     }
-
     if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=sessiontimedout";
     } else {
       Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
       long id2 = user.getId();
       message.addAttribute("message",
-//          messageRepository.findAllByTimestampOrderByTimestampDesc());
           messageRepository.findAllByOrderByTimestampDesc());
-//          messageRepository.findAll());
-
       model.addAttribute("user", user.getUsername());
+//      users.addAttribute("users", messageRepository.findDistinctByUsernameOrderByTimestampDesc());
+      users.addAttribute("users", messageRepository.findAll());
+      id.addAttribute("id", id2);
+      if (error != null) {
+        error = error.toUpperCase();
+        message.addAttribute("error", ErrorMessages.valueOf(error).toString());
+      }
+      return "index";
+    }
+  }
+
+  @RequestMapping("/user")
+  public String user(@RequestParam(value = "username") String username,
+      @RequestParam(value = "error", required = false) String error, Model message,
+      Model model, Model id, Model users, Model usermessages) {
+    System.out.println(logic.getLogMessage("/"));
+    Map<String, String> env = System.getenv();
+    for (String envName : env.keySet()) {
+      System.out.format("%s=%s%n",
+          envName,
+          env.get(envName));
+    }
+    if (logic.userTimeout(userRepository)) {
+      return "redirect:/enter?error=sessiontimedout";
+    } else {
+      Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
+      long id2 = user.getId();
+      message.addAttribute("message",
+          messageRepository.findAllByOrderByTimestampDesc());
+      model.addAttribute("user", user.getUsername());
+      users.addAttribute("users", messageRepository.findAll());
+      usermessages.addAttribute("usermessages", messageRepository.findAll());
+//      usermessages.addAttribute("usermessages", messageRepository.findDistinctByUsernameOrderByTimestampDesc(username));
       id.addAttribute("id", id2);
       if (error != null) {
         error = error.toUpperCase();
