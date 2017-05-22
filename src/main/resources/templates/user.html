@@ -55,8 +55,8 @@
     <div class="col-sm-8 blog-main">
       <div class="blog-post"  th:each="m : ${usermessages}">
         <p th:text="'Message: ' + ${m.getText()}"></p>
-        <p class="blog-post-meta"><span th:text="${m.getTimestamp()}"></span> by <span th:text="${m.getUsername()}"></span></p>
-
+        <p class="blog-post-meta"><span th:text="${m.getTimestamp()}"></span> by <a th:href="'/user?username=' + ${m.getUsername()}" >
+          <button type="button" class="btn btn-xs btn-primary" th:text="${m.getUsername()}"></button></a></p>
         <hr/>
       </div><!-- /.blog-post -->
       <nav>
@@ -81,9 +81,8 @@
       <div class="sidebar-module">
         <h4>Users</h4>
         <ol class="list-unstyled"  th:each="u : ${users}">
-          <li><a href="/user" >
-            <button type="button" class="btn btn-xs btn-primary" th:text="${u.getUsername()}"></button></a></li>
-
+          <li><a th:href="'/user?username=' + ${u}" >
+            <button type="button" class="btn btn-xs btn-primary" th:text="${u}"></button></a></li>
         </ol>
       </div>
       <div class="sidebar-module">
