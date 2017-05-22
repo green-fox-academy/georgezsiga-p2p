@@ -36,7 +36,7 @@
 
       <form action="/updateform" method="post" enctype="application/x-www-form-urlencoded">      <a class="blog-nav-item active" href="/">Home</a>
         <a class="blog-nav-item" href="/enter">Log in with other user</a>
-        Your Username: <input title="username" type="text" name="username" th:placeholder="${user}" autocomplete="off" required="required"/><input title="id" type="hidden" name="id" th:value="${id}"/> <input type="submit" value="update"/>
+        Your Username: <input title="username" type="text" name="username" th:placeholder="${user}" autocomplete="off" required="required"/><input title="id" type="hidden" name="id" th:value="${id}"/> <button type="submit" class="btn btn-xs btn-success">update</button>
       </form>
 
     </nav>
@@ -75,7 +75,7 @@
           <input title="id" type="hidden" name="id" th:value="${id}"/>
           <textarea name="message" title="message" rows="3" autocomplete="off" required="required" placeholder="Type your message here"></textarea>
           <br/>
-          <input type="submit" value="Send"/>
+          <button type="submit" class="btn btn-sm btn-success">send</button>
         </form>
       </div>
       <div class="sidebar-module">
