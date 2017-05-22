@@ -42,7 +42,7 @@
                               autocomplete="off" required="required"/><input title="id"
                                                                              type="hidden" name="id"
                                                                              th:value="${id}"/>
-        <input type="submit" value="update"/>
+        <button type="submit" class="btn btn-xs btn-success">update</button>
       </form>
     </nav>
   </div>
@@ -79,7 +79,7 @@
           <textarea name="message" title="message" rows="3" autocomplete="off" required="required"
                     placeholder="Type your message here"></textarea>
           <br/>
-          <input type="submit" value="Send"/>
+          <button type="submit" class="btn btn-sm btn-success">send</button>
         </form>
       </div>
       <div class="sidebar-module">
@@ -102,8 +102,6 @@
   </div><!-- /.row -->
 </div><!-- /.container -->
 <footer class="blog-footer">
-  <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a
-      href="https://twitter.com/mdo">@mdo</a>.</p>
   <p>
     <a href="#">Back to top</a>
   </p>
