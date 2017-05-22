@@ -61,7 +61,6 @@ public class RestController {
       if (incomingMessage.getClient().getId().equals(System.getenv("CHAT_APP_UNIQUE_ID"))) {
         return new ResponseEntity<>(statusOk, HttpStatus.OK);
       }
-
       while (logic.checkId(messageRepository, incomingMessage.getMessage().getId())) {
         incomingMessage.getMessage().generateNewId();
       }
@@ -70,9 +69,7 @@ public class RestController {
       statusOk = new StatusOk();
       return new ResponseEntity<>(statusOk, HttpStatus.OK);
     }
-
     statusError = new StatusError(status);
     return new ResponseEntity<>(statusError, HttpStatus.BAD_REQUEST);
   }
-
 }
