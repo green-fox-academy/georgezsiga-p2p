@@ -59,7 +59,7 @@ public class RestController {
     String status = logic.checkAllFields(incomingMessage);
     if (status.equals("ok")) {
       if (incomingMessage.getClient().getId().equals(System.getenv("CHAT_APP_UNIQUE_ID"))) {
-        return new ResponseEntity<>(statusOk, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(statusOk, HttpStatus.OK);
       }
 
       while (logic.checkId(messageRepository, incomingMessage.getMessage().getId())) {
@@ -68,11 +68,11 @@ public class RestController {
       messageRepository.save(incomingMessage.getMessage());
       restTemplate.postForObject(viktor, incomingMessage, StatusOk.class);
       statusOk = new StatusOk();
-      return new ResponseEntity<>(statusOk, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(statusOk, HttpStatus.OK);
     }
 
     statusError = new StatusError(status);
-    return new ResponseEntity<>(statusOk, HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(statusError, HttpStatus.UNAUTHORIZED);
   }
 
 }
