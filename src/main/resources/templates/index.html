@@ -1,39 +1,128 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-  <link href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet"/>
   <meta charset="UTF-8" http-equiv="refresh" content="30"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <link rel="icon" href="../../favicon.ico"/>
+
   <title>George`s peer to peer chat program</title>
-  <link rel="stylesheet" type="text/css" href="styles.css"/>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet"/>
+
+  <!-- Custom styles for this template -->
+  <link href="blog.css" rel="stylesheet"/>
+
+  <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+  <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+  <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 </head>
+
 <body>
-<h1 class="page-header">George`s peer to peer chat program</h1>
-<form action="/updateform" method="post" enctype="application/x-www-form-urlencoded">
-  Your Username: <input title="username" type="text" name="username" th:placeholder="${user}" autocomplete="off" required="required"/><input title="id" type="hidden" name="id" th:value="${id}"/> <input type="submit" value="update"/>
-</form>
-<h2 th:text="${error}" class="red"></h2>
-<br/>
-<a href="/enter">Log in with an other user - please</a>
-<br/>
-<br/>
-<form action="/newmessageform" method="post" enctype="application/x-www-form-urlencoded">
-  <input title="id" type="hidden" name="id" th:value="${id}"/>
-  <textarea name="message" title="message" cols="31" rows="3" autocomplete="off" required="required" placeholder="Type your message here"></textarea>
-  <br/>
-  <input type="submit" value="Send"/>
-</form>
-<br/>
-<h2>Previous messages</h2>
-<table th:each="m : ${message}">
-  <tr>
-  <td th:text="'User: ' + ${m.getUsername()}"></td>
-  </tr>
-  <tr>
-    <td th:text="'Message: ' + ${m.getText()}"></td>
-    <hr/>
-  </tr>
-</table>
-<hr/>
+
+<div class="blog-masthead">
+  <div class="container">
+    <nav class="blog-nav">
+
+      <form action="/updateform" method="post" enctype="application/x-www-form-urlencoded">      <a class="blog-nav-item active" href="/">Home</a>
+        <a class="blog-nav-item" href="/enter">Log in with other user</a>
+        Your Username: <input title="username" type="text" name="username" th:placeholder="${user}" autocomplete="off" required="required"/><input title="id" type="hidden" name="id" th:value="${id}"/> <input type="submit" value="update"/>
+      </form>
+
+    </nav>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="blog-header">
+    <h1>George`s peer to peer chat program</h1>
+    <h2 th:text="${error}" class="red"></h2>
+    <h3>Previous messages</h3>
+  </div>
+
+  <div class="row" >
+    <div class="col-sm-8 blog-main">
+      <div class="blog-post"  th:each="m : ${message}">
+        <p th:text="'Message: ' + ${m.getText()}"></p>
+        <p class="blog-post-meta"><span th:text="${m.getTimestamp()}"></span> by <span th:text="${m.getUsername()}"></span></p>
+
+        <hr/>
+      </div><!-- /.blog-post -->
+      <nav>
+        <ul class="pager">
+          <li><a href="#">Previous</a></li>
+          <li><a href="#">Next</a></li>
+        </ul>
+      </nav>
+
+    </div><!-- /.blog-main -->
+
+    <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+      <div class="sidebar-module sidebar-module-inset">
+        <h4>New Message</h4>
+        <form action="/newmessageform" method="post" enctype="application/x-www-form-urlencoded">
+          <input title="id" type="hidden" name="id" th:value="${id}"/>
+          <textarea name="message" title="message" rows="3" autocomplete="off" required="required" placeholder="Type your message here"></textarea>
+          <br/>
+          <input type="submit" value="Send"/>
+        </form>
+      </div>
+      <div class="sidebar-module">
+        <h4>Users</h4>
+        <ol class="list-unstyled">
+          <li><a href="#">March 2014</a></li>
+          <li><a href="#">February 2014</a></li>
+          <li><a href="#">January 2014</a></li>
+          <li><a href="#">December 2013</a></li>
+          <li><a href="#">November 2013</a></li>
+          <li><a href="#">October 2013</a></li>
+          <li><a href="#">September 2013</a></li>
+          <li><a href="#">August 2013</a></li>
+          <li><a href="#">July 2013</a></li>
+          <li><a href="#">June 2013</a></li>
+          <li><a href="#">May 2013</a></li>
+          <li><a href="#">April 2013</a></li>
+        </ol>
+      </div>
+      <div class="sidebar-module">
+        <h4>Elsewhere</h4>
+        <ol class="list-unstyled">
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Facebook</a></li>
+        </ol>
+      </div>
+    </div><!-- /.blog-sidebar -->
+
+  </div><!-- /.row -->
+
+</div><!-- /.container -->
+
+<footer class="blog-footer">
+  <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+  <p>
+    <a href="#">Back to top</a>
+  </p>
+</footer>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>-->
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 <script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 </body>
