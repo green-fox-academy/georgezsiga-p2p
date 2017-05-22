@@ -72,7 +72,7 @@ public class RestController {
     }
 
     statusError = new StatusError(status);
-    return new ResponseEntity<>(statusError, HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(statusError, HttpStatus.BAD_REQUEST);
   }
 
 }
