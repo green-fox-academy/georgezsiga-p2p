@@ -12,8 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Time;
 import java.sql.Timestamp;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,9 +59,8 @@ public class RestController {
     System.out.println(logic.getLogMessage("/api/message/receive"));
     String status = logic.checkAllFields(incomingMessage);
     if (status.equals("ok")) {
-      if (incomingMessage.getClient().getId().equals(System.getenv("CHAT_APP_UNIQUE_ID"))) {
+      if (incomingMessage.getClient().getId().equals(System.getenv("CHAT_APP_UNIQUE_ID")))
         return statusOk;
-      }
       while (logic.checkId(messageRepository, incomingMessage.getMessage().getId())) {
         incomingMessage.getMessage().generateNewId();
       }
@@ -69,6 +70,7 @@ public class RestController {
       statusOk = new StatusOk();
       return statusOk;
     }
+
     statusError = new StatusError(status);
     return statusError;
   }
