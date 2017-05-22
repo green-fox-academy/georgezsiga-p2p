@@ -67,8 +67,7 @@ public class MainController {
       message.addAttribute("message",
           messageRepository.findAllByOrderByTimestampDesc());
       model.addAttribute("user", user.getUsername());
-//      users.addAttribute("users", messageRepository.findDistinctByUsernameOrderByTimestampDesc());
-      users.addAttribute("users", messageRepository.findAll());
+      users.addAttribute("users", messageRepository.findAllByUsernameOrderByTimestamp());
       id.addAttribute("id", id2);
       if (error != null) {
         error = error.toUpperCase();
@@ -97,15 +96,14 @@ public class MainController {
       message.addAttribute("message",
           messageRepository.findAllByOrderByTimestampDesc());
       model.addAttribute("user", user.getUsername());
-      users.addAttribute("users", messageRepository.findAll());
-      usermessages.addAttribute("usermessages", messageRepository.findAll());
-//      usermessages.addAttribute("usermessages", messageRepository.findDistinctByUsernameOrderByTimestampDesc(username));
+      users.addAttribute("users", messageRepository.findAllByUsernameOrderByTimestamp());
+      usermessages.addAttribute("usermessages", messageRepository.findAllByUsernameOrderByTimestampDesc(username));
       id.addAttribute("id", id2);
       if (error != null) {
         error = error.toUpperCase();
         message.addAttribute("error", ErrorMessages.valueOf(error).toString());
       }
-      return "index";
+      return "user";
     }
   }
 
