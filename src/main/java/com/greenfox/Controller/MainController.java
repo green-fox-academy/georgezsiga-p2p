@@ -38,6 +38,7 @@ public class MainController {
   String viktor = "https://chat-p2p.herokuapp.com/api/message/receive";
   String patrik = "https://phorv1chatapp.herokuapp.com/api/message/receive";
   String ramin = "https://greenfox-chat-app.herokuapp.com/api/message/receive";
+  String nora = "https://peertopeerchat.herokuapp.com/api/message/receive";
 
   RestTemplate restTemplate = new RestTemplate();
 
@@ -152,7 +153,7 @@ public class MainController {
       System.out.println("exception");
     }
 
-    restTemplate.postForObject(ramin, incom, StatusOk.class);
+    restTemplate.postForObject(nora, incom, StatusOk.class);
 //   StatusOk newMessage =  restTemplate.postForObject(patrik, incom, StatusOk.class);
     logic.updateLastActive(userRepository, id);
     return "redirect:/";
