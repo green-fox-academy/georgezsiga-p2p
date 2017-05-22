@@ -78,4 +78,7 @@ public class Logic {
     return errorString;
   }
 
+//  public Boolean checkIfMessageExist() {
+//
+//  }
 }
