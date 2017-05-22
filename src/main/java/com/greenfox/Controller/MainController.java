@@ -63,7 +63,11 @@ public class MainController {
     } else {
       Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
       long id2 = user.getId();
-      message.addAttribute("message", messageRepository.findAll());
+      message.addAttribute("message",
+//          messageRepository.findAllByTimestampOrderByTimestampDesc());
+          messageRepository.findAllByOrderByTimestampDesc());
+//          messageRepository.findAll());
+
       model.addAttribute("user", user.getUsername());
       id.addAttribute("id", id2);
       if (error != null) {
@@ -114,7 +118,7 @@ public class MainController {
   @RequestMapping("/updateform")
   public String updateForm(@RequestParam(value = "username", required = false) String username,
       @RequestParam(value = "id") long id) {
-    System.out.println(logic.getLogMessage("/updateForm"));
+    System.out.println(logic.getLogMessage("/updateform"));
     if (username.equals("")) {
       return "redirect:/enter?error=nousername";
     }
@@ -126,7 +130,7 @@ public class MainController {
   @RequestMapping("/newmessageform")
   public String newMessageForm(@RequestParam(value = "message", required = false) String message,
       @RequestParam(value = "id") long id) {
-    System.out.println(logic.getLogMessage("/updateForm"));
+    System.out.println(logic.getLogMessage("/newmessageform"));
     if (message.equals("")) {
       return "redirect:/?error=nomessage";
     }

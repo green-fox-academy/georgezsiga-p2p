@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 public interface UserRepository extends CrudRepository<Felhasznalo, Long> {
 
   Felhasznalo findFirstByOrderByLastActiveDesc();
+  Felhasznalo findFirstByOrderByLastActiveAsc();
 
   List<Felhasznalo> findByUsername(String username);
 

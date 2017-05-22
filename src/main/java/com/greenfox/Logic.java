@@ -1,6 +1,8 @@
 package com.greenfox;
 
+import com.greenfox.Model.Client;
 import com.greenfox.Model.Felhasznalo;
+import com.greenfox.Model.IncomingMessage;
 import com.greenfox.Model.Message;
 import com.greenfox.Repository.MessageRepository;
 import com.greenfox.Repository.UserRepository;
@@ -54,26 +56,25 @@ public class Logic {
     userRepository.save(userRepository.findByUsername(username));
   }
 
-  public String checkAllFields(Message message) {
-    if (message.getId() != 0 && message.getText() != null && message.getTimestamp() != null && message.getUsername() != null) {
+  public String checkAllFields(IncomingMessage incomingMessage) {
+    Message message = incomingMessage.getMessage();
+    Client client = incomingMessage.getClient();
+    if (message.getId() != 0 && message.getText() != null && message.getTimestamp() != null && message.getUsername() != null && client.getId() != null) {
       return "ok";
     }
     System.out.println("in");
     String errorString = "Missing field(s): ";
     if (message.getId() == 0) {
-      System.out.println("1");
       errorString += " id;";
     } else if (message.getText() == null) {
-      System.out.println("2");
       errorString += " text;";
     } else if (message.getTimestamp() == null) {
-      System.out.println("3");
       errorString += " timestamp;";
     } else if (message.getUsername() == null) {
-      System.out.println("4");
       errorString += " username;";
+    } else if (client.getId() == null) {
+      errorString += " client.id;";
     }
-    System.out.println("6");
     return errorString;
   }
 

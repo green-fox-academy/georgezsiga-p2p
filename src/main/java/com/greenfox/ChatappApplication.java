@@ -21,4 +21,4 @@ public class ChatappApplication implements CommandLineRunner{
 	}
 }
 //TODO after login, show only the new messages since last login
-//TODO reverse order, new messages on top
+//TODO only list first few messages

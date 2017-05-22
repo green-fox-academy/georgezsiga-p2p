@@ -55,8 +55,14 @@ public class RestController {
   @PostMapping("/api/message/receive")
   public Status receiveMessage(@RequestBody IncomingMessage incomingMessage) {
     System.out.println(logic.getLogMessage("/api/message/receive"));
-    String status = logic.checkAllFields(incomingMessage.getMessage());
+    String status = logic.checkAllFields(incomingMessage);
     if (status.equals("ok")) {
+      if (incomingMessage.getClient().getId().equals(System.getenv("CHAT_APP_UNIQUE_ID"))) {
+        return statusOk;
+      }
+      while (logic.checkId(messageRepository, incomingMessage.getMessage().getId())) {
+        incomingMessage.getMessage().generateNewId();
+      }
       messageRepository.save(incomingMessage.getMessage());
       restTemplate.postForObject(marci, incomingMessage, StatusOk.class);
       mainController.refresh();
