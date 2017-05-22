@@ -18,7 +18,8 @@
   <link href="blog.css" rel="stylesheet"/>
 
   <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-  <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+  <!--[if lt IE 9]>
+  <script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
   <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -34,29 +35,33 @@
   <div class="container">
     <nav class="blog-nav">
 
-      <form action="/updateform" method="post" enctype="application/x-www-form-urlencoded">      <a class="blog-nav-item active" href="/">Home</a>
+      <form action="/updateform" method="post" enctype="application/x-www-form-urlencoded"><a
+          class="blog-nav-item active" href="/">Home</a>
         <a class="blog-nav-item" href="/enter">Log in with other user</a>
-        Your Username: <input title="username" type="text" name="username" th:placeholder="${user}" autocomplete="off" required="required"/><input title="id" type="hidden" name="id" th:value="${id}"/> <input type="submit" value="update"/>
+        Your Username: <input title="username" type="text" name="username" th:placeholder="${user}"
+                              autocomplete="off" required="required"/><input title="id"
+                                                                             type="hidden" name="id"
+                                                                             th:value="${id}"/>
+        <input type="submit" value="update"/>
       </form>
-
     </nav>
   </div>
 </div>
-
 <div class="container">
-
   <div class="blog-header">
     <h1>George`s peer to peer chat program</h1>
     <h2 th:text="${error}" class="red"></h2>
     <h3>Previous messages</h3>
   </div>
-
-  <div class="row" >
+  <div class="row">
     <div class="col-sm-8 blog-main">
-      <div class="blog-post"  th:each="m : ${message}">
+      <div class="blog-post" th:each="m : ${message}">
         <p th:text="'Message: ' + ${m.getText()}"></p>
-        <p class="blog-post-meta"><span th:text="${m.getTimestamp()}"></span> by <span th:text="${m.getUsername()}"></span></p>
-
+        <p class="blog-post-meta"><span th:text="${m.getTimestamp()}"></span> by <a
+            th:href="'/user?username=' + ${m.getUsername()}">
+          <button type="button" class="btn btn-xs btn-primary"
+                  th:text="${m.getUsername()}"></button>
+        </a></p>
         <hr/>
       </div><!-- /.blog-post -->
       <nav>
@@ -65,25 +70,24 @@
           <li><a href="#">Next</a></li>
         </ul>
       </nav>
-
     </div><!-- /.blog-main -->
-
     <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
       <div class="sidebar-module sidebar-module-inset">
         <h4>New Message</h4>
         <form action="/newmessageform" method="post" enctype="application/x-www-form-urlencoded">
           <input title="id" type="hidden" name="id" th:value="${id}"/>
-          <textarea name="message" title="message" rows="3" autocomplete="off" required="required" placeholder="Type your message here"></textarea>
+          <textarea name="message" title="message" rows="3" autocomplete="off" required="required"
+                    placeholder="Type your message here"></textarea>
           <br/>
           <input type="submit" value="Send"/>
         </form>
       </div>
       <div class="sidebar-module">
         <h4>Users</h4>
-        <ol class="list-unstyled"  th:each="u : ${users}">
-          <li><a th:href="'/user?username=' + ${u.getUsername()}" >
-            <button type="button" class="btn btn-xs btn-primary" th:text="${u.getUsername()}"></button></a></li>
-
+        <ol class="list-unstyled" th:each="u : ${users}">
+          <li><a th:href="'/user?username=' + ${u}">
+            <button type="button" class="btn btn-xs btn-primary" th:text="${u}"></button>
+          </a></li>
         </ol>
       </div>
       <div class="sidebar-module">
@@ -95,19 +99,15 @@
         </ol>
       </div>
     </div><!-- /.blog-sidebar -->
-
   </div><!-- /.row -->
-
 </div><!-- /.container -->
-
 <footer class="blog-footer">
-  <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+  <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a
+      href="https://twitter.com/mdo">@mdo</a>.</p>
   <p>
     <a href="#">Back to top</a>
   </p>
 </footer>
-
-
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
