@@ -23,3 +23,7 @@ public class ChatappApplication implements CommandLineRunner{
 //TODO after login, show only the new messages since last login
 //TODO only list first few messages
 //TODO max 10 message, arrows at bottom
+//TODO change timestamp to environmental time
+//TODO check for already arrived message... timestamp, text..
+//TODO add change send to environmental variable
+//TODO add checkbox if you want to change name on previous messages
