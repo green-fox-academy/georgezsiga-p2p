@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
-import org.springframework.messaging.handler.annotation.MessageMapping;
-
 /**
  * Created by georgezsiga on 5/17/17.
  */
@@ -48,7 +46,6 @@ public class MainController {
     return "index";
   }
 
-  @Messa
   @RequestMapping("/")
   public String home(@RequestParam(value = "error", required = false) String error, Model message,
       Model model, Model id) {
