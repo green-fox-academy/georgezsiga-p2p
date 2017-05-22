@@ -16,5 +16,13 @@ public interface MessageRepository extends CrudRepository<Message, Long> {
 
   List<Message> findAllByOrderByTimestampDesc();
 //  List<Message> findDistinctByUsernameOrderByTimestampDesc(@Param("username") String username);
-//  List<Message> findDistinctByUsernameOrderByTimestampDesc();
+//  List<Message> findDistinctByUsername();
+
+  @Query("select distinct username from Message")
+  List<Message> findAllByUsernameOrderByTimestamp();
+
+//  List<Message> findFirstByUsernameOrderByTimestamp();
+
+  List<Message> findAllByUsernameOrderByTimestampDesc(@Param("username") String username);
+
 }
