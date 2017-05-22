@@ -16,6 +16,7 @@ import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,13 +34,11 @@ import org.springframework.web.client.RestTemplate;
 public class RestController {
 
   @Autowired
-  MainController mainController;
-
-  @Autowired
   MessageRepository messageRepository;
 
   Logic logic = new Logic();
   String marci = "https://p2p-chat-seed0forever.herokuapp.com/api/message/receive";
+  String viktor = "https://chat-p2p.herokuapp.com/api/message/receive";
   RestTemplate restTemplate = new RestTemplate();
 
   StatusOk statusOk;
@@ -55,24 +54,23 @@ public class RestController {
   }
 
   @PostMapping("/api/message/receive")
-  public Status receiveMessage(@RequestBody IncomingMessage incomingMessage) {
+  public ResponseEntity<?> receiveMessage(@RequestBody IncomingMessage incomingMessage) {
     System.out.println(logic.getLogMessage("/api/message/receive"));
     String status = logic.checkAllFields(incomingMessage);
     if (status.equals("ok")) {
       if (incomingMessage.getClient().getId().equals(System.getenv("CHAT_APP_UNIQUE_ID")))
-        return statusOk;
+        return new ResponseEntity<>(statusOk, HttpStatus.UNAUTHORIZED);
       while (logic.checkId(messageRepository, incomingMessage.getMessage().getId())) {
         incomingMessage.getMessage().generateNewId();
       }
       messageRepository.save(incomingMessage.getMessage());
-      restTemplate.postForObject(marci, incomingMessage, StatusOk.class);
-      mainController.refresh();
+      restTemplate.postForObject(viktor, incomingMessage, StatusOk.class);
       statusOk = new StatusOk();
-      return statusOk;
+      return new ResponseEntity<>(statusOk, HttpStatus.UNAUTHORIZED);
     }
 
     statusError = new StatusError(status);
-    return statusError;
+    return new ResponseEntity<>(statusError, HttpStatus.UNAUTHORIZED);
   }
 
 }
