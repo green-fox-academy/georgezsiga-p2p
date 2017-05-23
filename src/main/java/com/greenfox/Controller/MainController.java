@@ -9,6 +9,8 @@ import com.greenfox.Model.Message;
 import com.greenfox.Model.StatusOk;
 import com.greenfox.Repository.MessageRepository;
 import com.greenfox.Repository.UserRepository;
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JEditorPane;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,7 @@ public class MainController {
   String nora = "https://peertopeerchat.herokuapp.com/api/message/receive";
 
   RestTemplate restTemplate = new RestTemplate();
+  Timestamp lastLogin;
 
   @ExceptionHandler(Exception.class)
   public String handleAllExceptions(Exception a) {
@@ -67,13 +70,43 @@ public class MainController {
       message.addAttribute("message",
           messageRepository.findAllByOrderByTimestampDesc());
       model.addAttribute("user", user.getUsername());
-      users.addAttribute("users", messageRepository.findAllByUsernameOrderByTimestamp());
+      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
       id.addAttribute("id", id2);
       if (error != null) {
         error = error.toUpperCase();
         message.addAttribute("error", ErrorMessages.valueOf(error).toString());
       }
       return "index";
+    }
+  }
+
+  @RequestMapping("/new")
+  public String sinceLastLogin(@RequestParam(value = "time", required = false) String error, Model message,
+      Model model, Model id, Model users) {
+    System.out.println(logic.getLogMessage("/new"));
+    System.out.println(lastLogin);
+    Map<String, String> env = System.getenv();
+    for (String envName : env.keySet()) {
+      System.out.format("%s=%s%n",
+          envName,
+          env.get(envName));
+    }
+    if (logic.userTimeout(userRepository)) {
+      return "redirect:/enter?error=sessiontimedout";
+    } else {
+      Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
+      long id2 = user.getId();
+//      message.addAttribute("message",
+//          messageRepository.findAllByOrderByTimestampDesc());
+      message.addAttribute("message", messageRepository.findAllByTimestampIsAfterOrderByTimestampDesc(lastLogin));
+      model.addAttribute("user", user.getUsername());
+      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
+      id.addAttribute("id", id2);
+      if (error != null) {
+        error = error.toUpperCase();
+        message.addAttribute("error", ErrorMessages.valueOf(error).toString());
+      }
+      return "time";
     }
   }
 
@@ -96,7 +129,7 @@ public class MainController {
       message.addAttribute("message",
           messageRepository.findAllByOrderByTimestampDesc());
       model.addAttribute("user", user.getUsername());
-      users.addAttribute("users", messageRepository.findAllByUsernameOrderByTimestamp());
+      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
       usermessages.addAttribute("usermessages", messageRepository.findAllByUsernameOrderByTimestampDesc(username));
       id.addAttribute("id", id2);
       if (error != null) {
@@ -137,8 +170,9 @@ public class MainController {
       return "redirect:/enter?error=nousername";
     }
     if (userRepository.findFelhasznaloByUsername(username) != null) {
+      lastLogin = userRepository.findFelhasznaloByUsername(username).getLastActive();
       logic.updateLastActive(userRepository, username);
-      return "redirect:/";
+      return "redirect:/new";
     }
     userRepository.save(new Felhasznalo(username));
     return "redirect:/";
