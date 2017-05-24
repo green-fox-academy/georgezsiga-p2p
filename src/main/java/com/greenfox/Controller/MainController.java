@@ -46,6 +46,7 @@ public class MainController {
   String patrik = "https://phorv1chatapp.herokuapp.com/api/message/receive";
   String ramin = "https://greenfox-chat-app.herokuapp.com/api/message/receive";
   String nora = "https://peertopeerchat.herokuapp.com/api/message/receive";
+  String zsolt = "https://p2p-by-nagyza.herokuapp.com/api/message/receive";
 
   RestTemplate restTemplate = new RestTemplate();
   Timestamp lastLogin;
@@ -59,15 +60,9 @@ public class MainController {
 
   @RequestMapping("/")
   public String home(@RequestParam(value = "error", required = false) String error, HttpServletRequest request, Model message,
-      Model model, Model id, Model users) {
+      Model model, Model id, Model users, Model timestamp) {
     System.out.println(logic.getLogMessage("/"));
     requestLogger.info(request);
-    Map<String, String> env = System.getenv();
-    for (String envName : env.keySet()) {
-      System.out.format("%s=%s%n",
-          envName,
-          env.get(envName));
-    }
     if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=sessiontimedout";
     } else {
@@ -76,6 +71,8 @@ public class MainController {
       message.addAttribute("message",
           messageRepository.findAllByOrderByTimestampDesc());
       model.addAttribute("user", user.getUsername());
+//      timestamp.addAttribute("timestamp", messageRepository.findAllByOrderByTimestampDesc());
+
       users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
       id.addAttribute("id", id2);
       if (error != null) {
@@ -90,13 +87,6 @@ public class MainController {
   public String sinceLastLogin(@RequestParam(value = "time", required = false) String error, Model message,
       Model model, Model id, Model users) {
     System.out.println(logic.getLogMessage("/new"));
-    System.out.println(lastLogin);
-    Map<String, String> env = System.getenv();
-    for (String envName : env.keySet()) {
-      System.out.format("%s=%s%n",
-          envName,
-          env.get(envName));
-    }
     if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=sessiontimedout";
     } else {
@@ -122,12 +112,6 @@ public class MainController {
       @RequestParam(value = "error", required = false) String error, Model message,
       Model model, Model id, Model users, Model usermessages) {
     System.out.println(logic.getLogMessage("/"));
-    Map<String, String> env = System.getenv();
-    for (String envName : env.keySet()) {
-      System.out.format("%s=%s%n",
-          envName,
-          env.get(envName));
-    }
     if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=sessiontimedout";
     } else {
@@ -231,15 +215,15 @@ public class MainController {
     IncomingMessage incom = new IncomingMessage(message1);
     Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
     incom.getClient().setId(System.getenv("CHAT_APP_UNIQUE_ID"));
-    System.out.println(System.getenv("CHAT_APP_UNIQUE_ID"));
+
     try {
       String jsonInString = mapper.writeValueAsString(incom);
-      System.out.println(jsonInString);
+//      System.out.println(jsonInString);
     } catch (Exception e) {
       System.out.println("exception");
     }
 
-    restTemplate.postForObject(nora, incom, StatusOk.class);
+    restTemplate.postForObject(zsolt, incom, StatusOk.class);
 //   StatusOk newMessage =  restTemplate.postForObject(patrik, incom, StatusOk.class);
     logic.updateLastActive(userRepository, id);
     return "redirect:/";

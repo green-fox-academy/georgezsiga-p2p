@@ -39,6 +39,7 @@ public class RestController {
   Logic logic = new Logic();
   String marci = "https://p2p-chat-seed0forever.herokuapp.com/api/message/receive";
   String viktor = "https://chat-p2p.herokuapp.com/api/message/receive";
+  String zsolt = "https://p2p-by-nagyza.herokuapp.com/api/message/receive";
   RestTemplate restTemplate = new RestTemplate();
 
   StatusOk statusOk;
@@ -65,7 +66,7 @@ public class RestController {
         incomingMessage.getMessage().generateNewId();
       }
       messageRepository.save(incomingMessage.getMessage());
-      restTemplate.postForObject(viktor, incomingMessage, StatusOk.class);
+      restTemplate.postForObject(zsolt, incomingMessage, StatusOk.class);
       statusOk = new StatusOk();
       return new ResponseEntity<>(statusOk, HttpStatus.OK);
     }
