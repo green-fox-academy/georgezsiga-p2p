@@ -9,9 +9,11 @@ import com.greenfox.Model.Message;
 import com.greenfox.Model.StatusOk;
 import com.greenfox.Repository.MessageRepository;
 import com.greenfox.Repository.UserRepository;
+import com.greenfox.RequestLogger;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.swing.JEditorPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,9 @@ public class MainController {
   @Autowired
   MessageRepository messageRepository;
 
+  @Autowired
+  RequestLogger requestLogger;
+
   Logic logic = new Logic();
 
   ObjectMapper mapper = new ObjectMapper();
@@ -53,9 +58,10 @@ public class MainController {
   }
 
   @RequestMapping("/")
-  public String home(@RequestParam(value = "error", required = false) String error, Model message,
+  public String home(@RequestParam(value = "error", required = false) String error, HttpServletRequest request, Model message,
       Model model, Model id, Model users) {
     System.out.println(logic.getLogMessage("/"));
+    requestLogger.info(request);
     Map<String, String> env = System.getenv();
     for (String envName : env.keySet()) {
       System.out.format("%s=%s%n",
