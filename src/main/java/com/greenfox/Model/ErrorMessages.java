@@ -6,6 +6,7 @@ package com.greenfox.Model;
 public enum ErrorMessages {
 
   NOUSERNAME("nousername", "The username field is empty"),
+  USERNAMEALREADYTAKEN("usernamealreadytaken", "Username is taken, choose an other one"),
   SESSIONTIMEDOUT("sessiontimedout", "Your session timed out, please log in again!"),
   NOMESSAGE("nomessage" , "You need to type in something to send");
 
