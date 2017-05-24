@@ -8,6 +8,7 @@ public enum ErrorMessages {
   NOUSERNAME("nousername", "The username field is empty"),
   USERNAMEALREADYTAKEN("usernamealreadytaken", "Username is taken, choose an other one"),
   SESSIONTIMEDOUT("sessiontimedout", "Your session timed out, please log in again!"),
+  NOURLUSER("nourluser", "Choose a new destination for the messages!"),
   NOMESSAGE("nomessage" , "You need to type in something to send");
 
   private final String name;

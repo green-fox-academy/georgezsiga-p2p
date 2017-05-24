@@ -62,7 +62,6 @@ public class Logic {
     if (message.getId() != 0 && message.getText() != null && message.getTimestamp() != null && message.getUsername() != null && client.getId() != null) {
       return "ok";
     }
-    System.out.println("in");
     String errorString = "Missing field(s): ";
     if (message.getId() == 0) {
       errorString += " id;";
@@ -78,7 +77,4 @@ public class Logic {
     return errorString;
   }
 
-//  public Boolean checkIfMessageExist() {
-//
-//  }
 }

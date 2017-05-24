@@ -48,6 +48,7 @@ public class MainController {
   String ramin = "https://greenfox-chat-app.herokuapp.com/api/message/receive";
   String nora = "https://peertopeerchat.herokuapp.com/api/message/receive";
   String zsolt = "https://p2p-by-nagyza.herokuapp.com/api/message/receive";
+  String marci = "https://p2p-chat-seed0forever.herokuapp.com/api/message/receive";
 
   RestTemplate restTemplate = new RestTemplate();
   Timestamp lastLogin;
@@ -80,7 +81,6 @@ public class MainController {
         if (names.contains(m.getUsername())) {
 
         } else {
-          System.out.println(m.getTimestamp().getTime());
           names.add(m.getUsername());
           finallist.add(m);
         }
@@ -119,7 +119,6 @@ public class MainController {
         if (names.contains(m.getUsername())) {
 
         } else {
-          System.out.println(m.getTimestamp().getTime());
           names.add(m.getUsername());
           finallist.add(m);
         }
@@ -159,7 +158,6 @@ public class MainController {
         if (names.contains(m.getUsername())) {
 
         } else {
-          System.out.println(m.getTimestamp().getTime());
           names.add(m.getUsername());
           finallist.add(m);
         }
@@ -261,7 +259,6 @@ public class MainController {
     IncomingMessage incom = new IncomingMessage(message1);
     Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
     incom.getClient().setId(System.getenv("CHAT_APP_UNIQUE_ID"));
-
     try {
       String jsonInString = mapper.writeValueAsString(incom);
 //      System.out.println(jsonInString);
@@ -269,9 +266,19 @@ public class MainController {
       System.out.println("exception");
     }
 
-    restTemplate.postForObject(zsolt, incom, StatusOk.class);
-//   StatusOk newMessage =  restTemplate.postForObject(patrik, incom, StatusOk.class);
+    restTemplate.postForObject(System.getenv("SEND_TO"), incom, StatusOk.class);
     logic.updateLastActive(userRepository, id);
+    return "redirect:/";
+  }
+
+  @RequestMapping("/newdestinationform")
+  public String newDestinationForm(@RequestParam(value = "urlUser", required = false) String urlUser) {
+    System.out.println(urlUser);
+    System.out.println(logic.getLogMessage("/newdestinationform"));
+    if (urlUser == null) {
+      return "redirect:/?error=nourluser";
+    }
+    System.getenv().put("SEND_TO", urlUser);
     return "redirect:/";
   }
 }
