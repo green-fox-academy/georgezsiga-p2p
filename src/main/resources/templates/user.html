@@ -82,17 +82,12 @@
       </div>
       <div class="sidebar-module">
         <h4>Users</h4>
-        <ol class="list-unstyled"  th:each="u : ${users}">
-          <li><a th:href="'/user?username=' + ${u}" >
-            <button type="button" class="btn btn-xs btn-primary" th:text="${u}"></button></a></li>
-        </ol>
-      </div>
-      <div class="sidebar-module">
-        <h4>Elsewhere</h4>
-        <ol class="list-unstyled">
-          <li><a href="#">GitHub</a></li>
-          <li><a href="#">Twitter</a></li>
-          <li><a href="#">Facebook</a></li>
+        <span class="glyphicon glyphicon-record" style="color: green" aria-hidden="true"></span> - active (past 2 hours)
+        <ol class="list-unstyled" th:each="t : ${timestamp}">
+          <li><a th:href="'/user?username=' + ${t.getUsername()}">
+            <button type="button" class="btn btn-xs btn-primary" th:text="${t.getUsername()}"></button>
+            <span th:if="${t.getTimestamp().getTime() &gt;  activelately}" th:class="'glyphicon glyphicon-record'" th:style="'color: green'" aria-hidden="true"></span>
+          </a></li>
         </ol>
       </div>
     </div><!-- /.blog-sidebar -->

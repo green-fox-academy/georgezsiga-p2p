@@ -11,6 +11,7 @@ import com.greenfox.Repository.MessageRepository;
 import com.greenfox.Repository.UserRepository;
 import com.greenfox.RequestLogger;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +61,7 @@ public class MainController {
 
   @RequestMapping("/")
   public String home(@RequestParam(value = "error", required = false) String error, HttpServletRequest request, Model message,
-      Model model, Model id, Model users, Model timestamp) {
+      Model model, Model id, Model users, Model timestamp, Model wroteMessage) {
     System.out.println(logic.getLogMessage("/"));
     requestLogger.info(request);
     if (logic.userTimeout(userRepository)) {
@@ -71,7 +72,23 @@ public class MainController {
       message.addAttribute("message",
           messageRepository.findAllByOrderByTimestampDesc());
       model.addAttribute("user", user.getUsername());
-//      timestamp.addAttribute("timestamp", messageRepository.findAllByOrderByTimestampDesc());
+
+
+      List<Message> finallist = new ArrayList<>();
+      List<String> names = new ArrayList<>();
+      for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
+        if (names.contains(m.getUsername())) {
+
+        } else {
+          System.out.println(m.getTimestamp().getTime());
+          names.add(m.getUsername());
+          finallist.add(m);
+        }
+      }
+      timestamp.addAttribute("timestamp", finallist);
+      Long activelately = System.currentTimeMillis()-7200000;
+      System.out.println("dkslfjsklddjflajdflkasjdflkj" + activelately);
+      wroteMessage.addAttribute("activelately", activelately);
 
       users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
       id.addAttribute("id", id2);
@@ -83,20 +100,34 @@ public class MainController {
     }
   }
 
+
+
   @RequestMapping("/new")
   public String sinceLastLogin(@RequestParam(value = "time", required = false) String error, Model message,
-      Model model, Model id, Model users) {
+      Model model, Model id, Model users, Model wroteMessage, Model timestamp) {
     System.out.println(logic.getLogMessage("/new"));
     if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=sessiontimedout";
     } else {
       Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
       long id2 = user.getId();
-//      message.addAttribute("message",
-//          messageRepository.findAllByOrderByTimestampDesc());
       message.addAttribute("message", messageRepository.findAllByTimestampIsAfterOrderByTimestampDesc(lastLogin));
       model.addAttribute("user", user.getUsername());
-//      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
+      List<Message> finallist = new ArrayList<>();
+      List<String> names = new ArrayList<>();
+      for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
+        if (names.contains(m.getUsername())) {
+
+        } else {
+          System.out.println(m.getTimestamp().getTime());
+          names.add(m.getUsername());
+          finallist.add(m);
+        }
+      }
+      timestamp.addAttribute("timestamp", finallist);
+      Long activelately = System.currentTimeMillis()-7200000;
+      System.out.println("dkslfjsklddjflajdflkasjdflkj" + activelately);
+      wroteMessage.addAttribute("activelately", activelately);
       users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
       id.addAttribute("id", id2);
       if (error != null) {
@@ -110,7 +141,7 @@ public class MainController {
   @RequestMapping("/user")
   public String user(@RequestParam(value = "username") String username,
       @RequestParam(value = "error", required = false) String error, Model message,
-      Model model, Model id, Model users, Model usermessages) {
+      Model model, Model id, Model users, Model usermessages, Model timestamp, Model wroteMessage) {
     System.out.println(logic.getLogMessage("/"));
     if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=sessiontimedout";
@@ -122,6 +153,21 @@ public class MainController {
       model.addAttribute("user", user.getUsername());
       users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
       usermessages.addAttribute("usermessages", messageRepository.findAllByUsernameOrderByTimestampDesc(username));
+      List<Message> finallist = new ArrayList<>();
+      List<String> names = new ArrayList<>();
+      for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
+        if (names.contains(m.getUsername())) {
+
+        } else {
+          System.out.println(m.getTimestamp().getTime());
+          names.add(m.getUsername());
+          finallist.add(m);
+        }
+      }
+      timestamp.addAttribute("timestamp", finallist);
+      Long activelately = System.currentTimeMillis()-7200000;
+      System.out.println("dkslfjsklddjflajdflkasjdflkj" + activelately);
+      wroteMessage.addAttribute("activelately", activelately);
       id.addAttribute("id", id2);
       if (error != null) {
         error = error.toUpperCase();

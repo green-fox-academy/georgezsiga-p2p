@@ -21,6 +21,9 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
   List<Message> findAllByOrderByTimestampDesc();
 
+  @Query("SELECT DISTINCT username, timestamp FROM Message order by timestamp DESC")
+  List<Message> findAllByOrderByTimestampAsc();
+
   List<Message> findAllByTimestampGreaterThan(@Param("timestamp") Timestamp timestamp);
 
   List<Message> findAllByUsername(@Param("username") String username);
