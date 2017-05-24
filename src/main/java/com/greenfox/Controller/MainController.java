@@ -100,6 +100,7 @@ public class MainController {
 //          messageRepository.findAllByOrderByTimestampDesc());
       message.addAttribute("message", messageRepository.findAllByTimestampIsAfterOrderByTimestampDesc(lastLogin));
       model.addAttribute("user", user.getUsername());
+//      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
       users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
       id.addAttribute("id", id2);
       if (error != null) {
@@ -174,16 +175,35 @@ public class MainController {
       logic.updateLastActive(userRepository, username);
       return "redirect:/new";
     }
+    if (messageRepository.findAllByUsername(username) != null) {
+      return "redirect:/enter?error=usernamealreadytaken";
+    }
     userRepository.save(new Felhasznalo(username));
     return "redirect:/";
   }
 
   @RequestMapping("/updateform")
   public String updateForm(@RequestParam(value = "username", required = false) String username,
-      @RequestParam(value = "id") long id) {
+      @RequestParam(value = "id") long id, @RequestParam(value="checkbox", required = false) String checkbox) {
     System.out.println(logic.getLogMessage("/updateform"));
     if (username.equals("")) {
-      return "redirect:/enter?error=nousername";
+      return "redirect:/?error=nousername";
+    }
+    if (userRepository.findFelhasznaloByUsername(username) != null) {
+      return "redirect:/?error=usernamealreadytaken";
+    }
+    if (messageRepository.findAllByUsername(username) != null) {
+      return "redirect:/?error=usernamealreadytaken";
+    }
+    if (checkbox == null) {
+      userRepository.findFelhasznaloById(id).setUsername(username);
+      logic.updateLastActive(userRepository, id);
+      return "redirect:/";
+    }
+    List<Message> userMessages = messageRepository.findAllByUsername(userRepository.findFelhasznaloById(id).getUsername());
+    for (Message m : userMessages) {
+      m.setUsername(username);
+      messageRepository.save(m);
     }
     userRepository.findFelhasznaloById(id).setUsername(username);
     logic.updateLastActive(userRepository, id);
