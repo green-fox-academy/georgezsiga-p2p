@@ -34,7 +34,6 @@
 <div class="blog-masthead">
   <div class="container">
     <nav class="blog-nav">
-
       <form action="/updateform" method="post" enctype="application/x-www-form-urlencoded"><a
           class="blog-nav-item active" href="/">Home</a>
         <a class="blog-nav-item" href="/enter">Log in with other user</a>
@@ -42,19 +41,20 @@
                               autocomplete="off" required="required"/><input title="id"
                                                                              type="hidden" name="id"
                                                                              th:value="${id}"/>
+        <input title="checkbox" type="checkbox" name="checkbox" value="on" /> Change username on old messages too.
         <button type="submit" class="btn btn-xs btn-success">update</button>
       </form>
     </nav>
   </div>
 </div>
 <div class="container">
-  <div class="blog-header">
-    <h1>George`s peer to peer chat program</h1>
-    <h2 th:text="${error}" class="red"></h2>
-    <h3>Previous messages</h3>
-  </div>
+  <br/>
   <div class="row">
     <div class="col-sm-8 blog-main">
+      <h1 align="center">George`s peer to peer chat program</h1>
+      <h3 th:text="${error}" class="red"></h3>
+      <h3>Previous messages</h3>
+      <hr/>
       <div class="blog-post" th:each="m : ${message}">
         <p th:text="'Message: ' + ${m.getText()}" style="word-wrap: break-word"></p>
         <p class="blog-post-meta"><span th:text="${m.getTimestamp()}"></span> by <a
