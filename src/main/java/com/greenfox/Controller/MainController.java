@@ -87,7 +87,6 @@ public class MainController {
       }
       timestamp.addAttribute("timestamp", finallist);
       Long activelately = System.currentTimeMillis()-7200000;
-      System.out.println("dkslfjsklddjflajdflkasjdflkj" + activelately);
       wroteMessage.addAttribute("activelately", activelately);
 
       users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
@@ -272,7 +271,7 @@ public class MainController {
   }
 
   @RequestMapping("/newdestinationform")
-  public String newDestinationForm(@RequestParam(value = "urlUser", required = false) String urlUser) {
+  public String newDestinationForm(@RequestParam(value = "select", required = false) String urlUser) {
     System.out.println(urlUser);
     System.out.println(logic.getLogMessage("/newdestinationform"));
     if (urlUser == null) {
