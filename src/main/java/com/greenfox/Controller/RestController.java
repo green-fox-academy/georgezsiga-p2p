@@ -1,5 +1,6 @@
 package com.greenfox.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.Logic;
 import com.greenfox.Model.Client;
 import com.greenfox.Model.IncomingMessage;
@@ -36,13 +37,13 @@ public class RestController {
   @Autowired
   MessageRepository messageRepository;
 
-  Logic logic = new Logic();
   String marci = "https://p2p-chat-seed0forever.herokuapp.com/api/message/receive";
-  String viktor = "https://chat-p2p.herokuapp.com/api/message/receive";
   String zsolt = "https://p2p-by-nagyza.herokuapp.com/api/message/receive";
   RestTemplate restTemplate = new RestTemplate();
+  ObjectMapper mapper = new ObjectMapper();
+  Logic logic = new Logic();
 
-  StatusOk statusOk;
+  private StatusOk statusOk = new StatusOk();
   StatusError statusError;
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -57,21 +58,25 @@ public class RestController {
   @PostMapping("/api/message/receive")
   public ResponseEntity<?> receiveMessage(@RequestBody IncomingMessage incomingMessage) {
     System.out.println(logic.getLogMessage("/api/message/receive"));
-    String status = logic.checkAllFields(incomingMessage);
-    if (status.equals("ok")) {
+    try {
+      String jsonInString = mapper.writeValueAsString(incomingMessage);
+      System.out.println(jsonInString);
+    } catch (Exception e) {
+      System.out.println("exception");
+    }
+    if (logic.checkAllFields(incomingMessage).equals("ok")) {
       if (incomingMessage.getClient().getId().equals(System.getenv("CHAT_APP_UNIQUE_ID"))) {
         return new ResponseEntity<>(statusOk, HttpStatus.OK);
       }
+      restTemplate.postForObject(marci, incomingMessage, Status.class);
+      restTemplate.postForObject(zsolt, incomingMessage, Status.class);
       while (logic.checkId(messageRepository, incomingMessage.getMessage().getId())) {
         incomingMessage.getMessage().generateNewId();
       }
       messageRepository.save(incomingMessage.getMessage());
-      restTemplate.postForObject(marci, incomingMessage, StatusOk.class);
-      restTemplate.postForObject(zsolt, incomingMessage, StatusOk.class);
-      statusOk = new StatusOk();
       return new ResponseEntity<>(statusOk, HttpStatus.OK);
     }
-    statusError = new StatusError(status);
+    statusError = new StatusError(logic.checkAllFields(incomingMessage));
     return new ResponseEntity<>(statusError, HttpStatus.BAD_REQUEST);
   }
 }

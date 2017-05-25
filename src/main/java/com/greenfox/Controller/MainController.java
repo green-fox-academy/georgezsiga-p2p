@@ -6,6 +6,7 @@ import com.greenfox.Model.ErrorMessages;
 import com.greenfox.Model.Felhasznalo;
 import com.greenfox.Model.IncomingMessage;
 import com.greenfox.Model.Message;
+import com.greenfox.Model.Status;
 import com.greenfox.Model.StatusOk;
 import com.greenfox.Model.WhoToSend;
 import com.greenfox.Repository.MessageRepository;
@@ -81,79 +82,6 @@ public class MainController {
     }
   }
 
-//  @RequestMapping("/new")
-//  public String sinceLastLogin(@RequestParam(value = "time", required = false) String error, Model message,
-//      Model model, Model id, Model users, Model wroteMessage, Model timestamp) {
-//    System.out.println(logic.getLogMessage("/new"));
-//    if (logic.userTimeout(userRepository)) {
-//      return "redirect:/enter?error=sessiontimedout";
-//    } else {
-//      Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
-//      long id2 = user.getId();
-//      message.addAttribute("message", messageRepository.findAllByTimestampIsAfterOrderByTimestampDesc(lastLogin));
-//      model.addAttribute("user", user.getUsername());
-//      List<Message> finallist = new ArrayList<>();
-//      List<String> names = new ArrayList<>();
-//      for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
-//        if (names.contains(m.getUsername())) {
-//
-//        } else {
-//          names.add(m.getUsername());
-//          finallist.add(m);
-//        }
-//      }
-//      timestamp.addAttribute("timestamp", finallist);
-//      Long activelately = System.currentTimeMillis()-7200000;
-//      System.out.println("dkslfjsklddjflajdflkasjdflkj" + activelately);
-//      wroteMessage.addAttribute("activelately", activelately);
-//      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
-//      id.addAttribute("id", id2);
-//      if (error != null) {
-//        error = error.toUpperCase();
-//        message.addAttribute("error", ErrorMessages.valueOf(error).toString());
-//      }
-//      return "time";
-//    }
-//  }
-//
-//  @RequestMapping("/user")
-//  public String user(@RequestParam(value = "username") String username,
-//      @RequestParam(value = "error", required = false) String error, Model message,
-//      Model model, Model id, Model users, Model usermessages, Model timestamp, Model wroteMessage) {
-//    System.out.println(logic.getLogMessage("/"));
-//    if (logic.userTimeout(userRepository)) {
-//      return "redirect:/enter?error=sessiontimedout";
-//    } else {
-//      Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
-//      long id2 = user.getId();
-//      message.addAttribute("message",
-//          messageRepository.findAllByOrderByTimestampDesc());
-//      model.addAttribute("user", user.getUsername());
-//      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
-//      usermessages.addAttribute("usermessages", messageRepository.findAllByUsernameOrderByTimestampDesc(username));
-//      List<Message> finallist = new ArrayList<>();
-//      List<String> names = new ArrayList<>();
-//      for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
-//        if (names.contains(m.getUsername())) {
-//
-//        } else {
-//          names.add(m.getUsername());
-//          finallist.add(m);
-//        }
-//      }
-//      timestamp.addAttribute("timestamp", finallist);
-//      Long activelately = System.currentTimeMillis()-7200000;
-//      System.out.println("dkslfjsklddjflajdflkasjdflkj" + activelately);
-//      wroteMessage.addAttribute("activelately", activelately);
-//      id.addAttribute("id", id2);
-//      if (error != null) {
-//        error = error.toUpperCase();
-//        message.addAttribute("error", ErrorMessages.valueOf(error).toString());
-//      }
-//      return "user";
-//    }
-//  }
-
   @RequestMapping("/enter")
   public String register(@RequestParam(value = "error", required = false) String error,
       Model message) {
@@ -227,15 +155,14 @@ public class MainController {
     }
     messageRepository.save(message1);
     IncomingMessage incom = new IncomingMessage(message1);
-    Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
     incom.getClient().setId(System.getenv("CHAT_APP_UNIQUE_ID"));
     try {
       String jsonInString = mapper.writeValueAsString(incom);
-//      System.out.println(jsonInString);
+      System.out.println(jsonInString);
     } catch (Exception e) {
       System.out.println("exception");
     }
-    restTemplate.postForObject(WhoToSend.valueOf(urlUser).getUrl(), incom, StatusOk.class);
+    restTemplate.postForObject(WhoToSend.valueOf(urlUser).getUrl(), incom, Status.class);
     logic.updateLastActive(userRepository, id);
     return "redirect:/";
   }

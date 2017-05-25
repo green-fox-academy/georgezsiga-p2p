@@ -4,6 +4,7 @@ import com.greenfox.Model.Client;
 import com.greenfox.Model.Felhasznalo;
 import com.greenfox.Model.IncomingMessage;
 import com.greenfox.Model.Message;
+import com.greenfox.Model.StatusOk;
 import com.greenfox.Repository.MessageRepository;
 import com.greenfox.Repository.UserRepository;
 import java.sql.Timestamp;
@@ -12,6 +13,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Created by georgezsiga on 5/17/17.
@@ -92,4 +95,6 @@ public class Logic {
     }
     return finallist;
   }
+
+
 }
