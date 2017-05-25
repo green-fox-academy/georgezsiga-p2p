@@ -47,7 +47,7 @@
       <h3 th:text="${error}" class="red"></h3>
       <h3>Previous messages</h3>
       <hr/>
-      <div class="blog-post" th:each="m : ${message}" th:if="${m.getTimestamp().getTime() &lt; timenow}">
+      <div class="blog-post" th:each="m : ${messages}" th:if="${m.getTimestamp().getTime() &lt; timenow}">
         <p th:text="'Message: ' + ${m.getText()}" style="word-wrap: break-word"></p>
         <p class="blog-post-meta"><span th:text="${m.getTimestamp()}"></span> by <a
             th:href="'/?user=' + ${m.getUsername()}">
