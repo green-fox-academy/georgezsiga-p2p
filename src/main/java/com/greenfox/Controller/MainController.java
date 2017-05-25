@@ -40,16 +40,7 @@ public class MainController {
   RequestLogger requestLogger;
 
   Logic logic = new Logic();
-
   ObjectMapper mapper = new ObjectMapper();
-
-  String viktor = "https://chat-p2p.herokuapp.com/api/message/receive";
-  String patrik = "https://phorv1chatapp.herokuapp.com/api/message/receive";
-  String ramin = "https://greenfox-chat-app.herokuapp.com/api/message/receive";
-  String nora = "https://peertopeerchat.herokuapp.com/api/message/receive";
-  String zsolt = "https://p2p-by-nagyza.herokuapp.com/api/message/receive";
-  String marci = "https://p2p-chat-seed0forever.herokuapp.com/api/message/receive";
-
   RestTemplate restTemplate = new RestTemplate();
   Timestamp lastLogin;
 
@@ -62,7 +53,7 @@ public class MainController {
 
   @RequestMapping("/")
   public String home(@RequestParam(value = "error", required = false) String error, HttpServletRequest request, Model message,
-      Model model, Model id, Model users, Model timestamp, Model wroteMessage, Model whotosend) {
+      Model model, Model id, Model users, Model timestamp, Model wroteMessage, Model timenow) {
     System.out.println(logic.getLogMessage("/"));
     requestLogger.info(request);
     if (logic.userTimeout(userRepository)) {
@@ -70,11 +61,10 @@ public class MainController {
     } else {
       Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
       long id2 = user.getId();
+      timenow.addAttribute("timenow", System.currentTimeMillis());
       message.addAttribute("message",
           messageRepository.findAllByOrderByTimestampDesc());
       model.addAttribute("user", user.getUsername());
-
-
       List<Message> finallist = new ArrayList<>();
       List<String> names = new ArrayList<>();
       for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
@@ -88,7 +78,6 @@ public class MainController {
       timestamp.addAttribute("timestamp", finallist);
       Long activelately = System.currentTimeMillis()-7200000;
       wroteMessage.addAttribute("activelately", activelately);
-//      whotosend.addAttribute("whotosend", WhoTo);
       users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
       id.addAttribute("id", id2);
       if (error != null) {
