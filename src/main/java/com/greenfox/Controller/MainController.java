@@ -67,6 +67,7 @@ public class MainController {
       return "redirect:/enter?error=sessiontimedout";
     }
     messages.addAttribute("messages", messageRepository.findAllByOrderByTimestampDesc());
+    messages.addAttribute("messages", messageRepository.findTop10ByOrderByTimestampDesc());
     if (error != null) {
       error = error.toUpperCase();
       errormessage.addAttribute("error", ErrorMessages.valueOf(error).toString());
@@ -81,7 +82,7 @@ public class MainController {
     model.addAttribute("user", felhasznalo.getUsername());
     timestamp.addAttribute("timestamp", logic.findDistinctUsernamesFromMessages(messageRepository));
     wroteMessage.addAttribute("activelately", System.currentTimeMillis()-7200000);
-    users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
+//    users.addAttribute("users", messageRepository.findTop25ByOrderByTimestamp());
     id.addAttribute("id", id2);
     return "index";
   }

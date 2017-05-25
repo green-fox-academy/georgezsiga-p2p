@@ -18,10 +18,15 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
   List<Message> findAllByUsername(@Param("username") String username);
 
+//  @Query("select DISTINCT username from Message order by username ASC")
+//  List<Message> findAllByOrderByTimestamp();
+
   @Query("select DISTINCT username from Message order by username ASC")
-  List<Message> findAllByOrderByTimestamp();
+  List<Message> findTop25ByOrderByTimestamp();
 
   List<Message> findAllByUsernameOrderByTimestampDesc(@Param("username") String username);
 
   List<Message> findAllByTimestampIsAfterOrderByTimestampDesc(@Param("timestamp") Timestamp timestamp);
+
+  List<Message> findTop10ByOrderByTimestampDesc();
 }

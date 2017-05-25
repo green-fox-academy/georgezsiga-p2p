@@ -20,10 +20,7 @@ public class ChatappApplication implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 	}
 }
-//TODO only list first few messages
 //TODO max 10 message, arrows at bottom
-//TODO change timestamp to environmental time
 //TODO check for already arrived message... timestamp, text..
 //TODO filter
-//TODO hide future messages
 
