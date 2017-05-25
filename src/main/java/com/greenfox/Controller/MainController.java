@@ -58,7 +58,7 @@ public class MainController {
       @RequestParam(value = "login", required = false) String login,
       @RequestParam(value = "user", required = false) String username,
       HttpServletRequest request,
-      Model messages, Model model, Model id, Model users, Model userlist, Model wroteMessage, Model timenow, Model errormessage) {
+      Model messages, Model model, Model id, Model userlist, Model wroteMessage, Model timenow, Model errormessage) {
     System.out.println(logic.getLogMessage("/"));
     requestLogger.info(request);
     Felhasznalo felhasznalo = userRepository.findFirstByOrderByLastActiveDesc();
@@ -66,7 +66,6 @@ public class MainController {
     if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=sessiontimedout";
     }
-//    messages.addAttribute("messages", messageRepository.findAllByOrderByTimestampDesc());
     messages.addAttribute("messages", messageRepository.findTop10ByOrderByTimestampDesc());
     if (error != null) {
       error = error.toUpperCase();
