@@ -53,33 +53,37 @@ public class MainController {
   }
 
   @RequestMapping("/")
-  public String home(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "login", required = false) String login, @RequestParam(value = "user", required = false) String username, HttpServletRequest request, Model message, Model model, Model id, Model users, Model timestamp, Model wroteMessage, Model timenow) {
+  public String home(
+      @RequestParam(value = "error", required = false) String error,
+      @RequestParam(value = "login", required = false) String login,
+      @RequestParam(value = "user", required = false) String username,
+      HttpServletRequest request,
+      Model messages, Model model, Model id, Model users, Model timestamp, Model wroteMessage, Model timenow, Model errormessage) {
     System.out.println(logic.getLogMessage("/"));
     requestLogger.info(request);
-    Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
-    long id2 = user.getId();
+    Felhasznalo felhasznalo = userRepository.findFirstByOrderByLastActiveDesc();
+    long id2 = felhasznalo.getId();
     if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=sessiontimedout";
-    } else {
-      if (error != null) {
-        error = error.toUpperCase();
-        message.addAttribute("error", ErrorMessages.valueOf(error).toString());
-      }
-      if (login != null) {
-        message.addAttribute("message", messageRepository.findAllByTimestampIsAfterOrderByTimestampDesc(lastLogin));
-      }
-      if (user != null) {
-        message.addAttribute("message", messageRepository.findAllByUsernameOrderByTimestampDesc(username));
-      }
-      message.addAttribute("message", messageRepository.findAllByOrderByTimestampDesc());
-      timenow.addAttribute("timenow", System.currentTimeMillis());
-      model.addAttribute("user", user.getUsername());
-      timestamp.addAttribute("timestamp", logic.findDistinctUsernamesFromMessages(messageRepository));
-      wroteMessage.addAttribute("activelately", System.currentTimeMillis()-7200000);
-      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
-      id.addAttribute("id", id2);
-      return "index";
     }
+    messages.addAttribute("messages", messageRepository.findAllByOrderByTimestampDesc());
+    if (error != null) {
+      error = error.toUpperCase();
+      errormessage.addAttribute("error", ErrorMessages.valueOf(error).toString());
+    }
+    if (login != null) {
+      messages.addAttribute("messages", messageRepository.findAllByTimestampIsAfterOrderByTimestampDesc(felhasznalo.getLastActive()));
+    }
+    if (username != null) {
+      messages.addAttribute("messages", messageRepository.findAllByUsernameOrderByTimestampDesc(username));
+    }
+    timenow.addAttribute("timenow", System.currentTimeMillis());
+    model.addAttribute("user", felhasznalo.getUsername());
+    timestamp.addAttribute("timestamp", logic.findDistinctUsernamesFromMessages(messageRepository));
+    wroteMessage.addAttribute("activelately", System.currentTimeMillis()-7200000);
+    users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
+    id.addAttribute("id", id2);
+    return "index";
   }
 
   @RequestMapping("/enter")
