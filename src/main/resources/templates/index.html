@@ -50,7 +50,7 @@
       <div class="blog-post" th:each="m : ${message}" th:if="${m.getTimestamp().getTime() &lt; timenow}">
         <p th:text="'Message: ' + ${m.getText()}" style="word-wrap: break-word"></p>
         <p class="blog-post-meta"><span th:text="${m.getTimestamp()}"></span> by <a
-            th:href="'/user?username=' + ${m.getUsername()}">
+            th:href="'/?user=' + ${m.getUsername()}">
           <button type="button" class="btn btn-xs btn-primary"
                   th:text="${m.getUsername()}"></button>
         </a></p>
