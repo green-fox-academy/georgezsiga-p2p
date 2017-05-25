@@ -9,6 +9,8 @@ import com.greenfox.Repository.UserRepository;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -77,4 +79,17 @@ public class Logic {
     return errorString;
   }
 
+  public List<Message> findDistinctUsernamesFromMessages(MessageRepository messageRepository) {
+    List<Message> finallist = new ArrayList<>();
+    List<String> names = new ArrayList<>();
+    for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
+      if (names.contains(m.getUsername())) {
+
+      } else {
+        names.add(m.getUsername());
+        finallist.add(m);
+      }
+    }
+    return finallist;
+  }
 }
