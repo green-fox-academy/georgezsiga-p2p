@@ -68,12 +68,12 @@ public class RestController {
       if (incomingMessage.getClient().getId().equals(System.getenv("CHAT_APP_UNIQUE_ID"))) {
         return new ResponseEntity<>(statusOk, HttpStatus.OK);
       }
-      restTemplate.postForObject(marci, incomingMessage, StatusOk.class);
-      restTemplate.postForObject(zsolt, incomingMessage, StatusOk.class);
       while (logic.checkId(messageRepository, incomingMessage.getMessage().getId())) {
         incomingMessage.getMessage().generateNewId();
       }
       messageRepository.save(incomingMessage.getMessage());
+      restTemplate.postForObject(marci, incomingMessage, StatusOk.class);
+      restTemplate.postForObject(zsolt, incomingMessage, StatusOk.class);
       return new ResponseEntity<>(statusOk, HttpStatus.OK);
     }
     statusError = new StatusError(logic.checkAllFields(incomingMessage));
