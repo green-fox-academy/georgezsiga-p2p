@@ -45,7 +45,7 @@
     <div class="col-sm-8 blog-main">
       <h1 align="center">George`s peer to peer chat program</h1>
       <h3 th:text="${error}" class="red"></h3>
-      <h3>Previous messages</h3>
+      <h3 align="center">Latest messages</h3>
       <hr/>
       <div class="blog-post" th:each="m : ${messages}" th:if="${m.getTimestamp().getTime() &lt; timenow}">
         <p th:text="'Message: ' + ${m.getText()}" style="word-wrap: break-word"></p>
@@ -86,8 +86,7 @@
         </form>
       </div>
       <div class="sidebar-module">
-        <h4>Users</h4>
-        TOP 20<br/>
+        <h4>Users - TOP 20</h4>
         <span class="glyphicon glyphicon-record" style="color: green" aria-hidden="true"></span> - active (past 2 hours)<br/>
         <span class="glyphicon glyphicon-hourglass" style="color: blue" aria-hidden="true"></span> - future messages
         <ol class="list-unstyled" th:each="t : ${userlist}">
