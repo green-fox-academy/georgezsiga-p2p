@@ -25,3 +25,7 @@ public class ChatappApplication implements CommandLineRunner{
 //TODO change timestamp to environmental time
 //TODO check for already arrived message... timestamp, text..
 //TODO add change send to environmental variable
+//TODO links enum
+//TODO filter
+//TODO hide future messages
+
