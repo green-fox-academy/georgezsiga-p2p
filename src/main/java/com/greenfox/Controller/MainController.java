@@ -52,126 +52,107 @@ public class MainController {
   }
 
   @RequestMapping("/")
-  public String home(@RequestParam(value = "error", required = false) String error, HttpServletRequest request, Model message,
-      Model model, Model id, Model users, Model timestamp, Model wroteMessage, Model timenow) {
+  public String home(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "login", required = false) String login, @RequestParam(value = "user", required = false) String username, HttpServletRequest request, Model message, Model model, Model id, Model users, Model timestamp, Model wroteMessage, Model timenow) {
     System.out.println(logic.getLogMessage("/"));
     requestLogger.info(request);
+    Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
+    long id2 = user.getId();
     if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=sessiontimedout";
     } else {
-      Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
-      long id2 = user.getId();
-      timenow.addAttribute("timenow", System.currentTimeMillis());
-      message.addAttribute("message",
-          messageRepository.findAllByOrderByTimestampDesc());
-      model.addAttribute("user", user.getUsername());
-      List<Message> finallist = new ArrayList<>();
-      List<String> names = new ArrayList<>();
-      for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
-        if (names.contains(m.getUsername())) {
-
-        } else {
-          names.add(m.getUsername());
-          finallist.add(m);
-        }
-      }
-      timestamp.addAttribute("timestamp", finallist);
-      Long activelately = System.currentTimeMillis()-7200000;
-      wroteMessage.addAttribute("activelately", activelately);
-      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
-      id.addAttribute("id", id2);
       if (error != null) {
         error = error.toUpperCase();
         message.addAttribute("error", ErrorMessages.valueOf(error).toString());
       }
+      if (login != null) {
+        message.addAttribute("message", messageRepository.findAllByTimestampIsAfterOrderByTimestampDesc(lastLogin));
+      }
+      if (user != null) {
+        message.addAttribute("message", messageRepository.findAllByUsernameOrderByTimestampDesc(username));
+      }
+      message.addAttribute("message", messageRepository.findAllByOrderByTimestampDesc());
+      timenow.addAttribute("timenow", System.currentTimeMillis());
+      model.addAttribute("user", user.getUsername());
+      timestamp.addAttribute("timestamp", logic.findDistinctUsernamesFromMessages(messageRepository));
+      wroteMessage.addAttribute("activelately", System.currentTimeMillis()-7200000);
+      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
+      id.addAttribute("id", id2);
       return "index";
     }
   }
 
-  @RequestMapping("/new")
-  public String sinceLastLogin(@RequestParam(value = "time", required = false) String error, Model message,
-      Model model, Model id, Model users, Model wroteMessage, Model timestamp) {
-    System.out.println(logic.getLogMessage("/new"));
-    if (logic.userTimeout(userRepository)) {
-      return "redirect:/enter?error=sessiontimedout";
-    } else {
-      Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
-      long id2 = user.getId();
-      message.addAttribute("message", messageRepository.findAllByTimestampIsAfterOrderByTimestampDesc(lastLogin));
-      model.addAttribute("user", user.getUsername());
-      List<Message> finallist = new ArrayList<>();
-      List<String> names = new ArrayList<>();
-      for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
-        if (names.contains(m.getUsername())) {
-
-        } else {
-          names.add(m.getUsername());
-          finallist.add(m);
-        }
-      }
-      timestamp.addAttribute("timestamp", finallist);
-      Long activelately = System.currentTimeMillis()-7200000;
-      System.out.println("dkslfjsklddjflajdflkasjdflkj" + activelately);
-      wroteMessage.addAttribute("activelately", activelately);
-      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
-      id.addAttribute("id", id2);
-      if (error != null) {
-        error = error.toUpperCase();
-        message.addAttribute("error", ErrorMessages.valueOf(error).toString());
-      }
-      return "time";
-    }
-  }
-
-  @RequestMapping("/user")
-  public String user(@RequestParam(value = "username") String username,
-      @RequestParam(value = "error", required = false) String error, Model message,
-      Model model, Model id, Model users, Model usermessages, Model timestamp, Model wroteMessage) {
-    System.out.println(logic.getLogMessage("/"));
-    if (logic.userTimeout(userRepository)) {
-      return "redirect:/enter?error=sessiontimedout";
-    } else {
-      Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
-      long id2 = user.getId();
-      message.addAttribute("message",
-          messageRepository.findAllByOrderByTimestampDesc());
-      model.addAttribute("user", user.getUsername());
-      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
-      usermessages.addAttribute("usermessages", messageRepository.findAllByUsernameOrderByTimestampDesc(username));
-      List<Message> finallist = new ArrayList<>();
-      List<String> names = new ArrayList<>();
-      for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
-        if (names.contains(m.getUsername())) {
-
-        } else {
-          names.add(m.getUsername());
-          finallist.add(m);
-        }
-      }
-      timestamp.addAttribute("timestamp", finallist);
-      Long activelately = System.currentTimeMillis()-7200000;
-      System.out.println("dkslfjsklddjflajdflkasjdflkj" + activelately);
-      wroteMessage.addAttribute("activelately", activelately);
-      id.addAttribute("id", id2);
-      if (error != null) {
-        error = error.toUpperCase();
-        message.addAttribute("error", ErrorMessages.valueOf(error).toString());
-      }
-      return "user";
-    }
-  }
-
-  @RequestMapping("/refresh")
-  public String refresh() {
-    System.out.println(logic.getLogMessage("/refresh"));
-    JEditorPane editorPane = new JEditorPane();
-    try {
-      editorPane.setPage("http://localhost8080/");
-    } catch (Exception e) {
-      System.out.println("error");
-    }
-    return "redirect:/test";
-  }
+//  @RequestMapping("/new")
+//  public String sinceLastLogin(@RequestParam(value = "time", required = false) String error, Model message,
+//      Model model, Model id, Model users, Model wroteMessage, Model timestamp) {
+//    System.out.println(logic.getLogMessage("/new"));
+//    if (logic.userTimeout(userRepository)) {
+//      return "redirect:/enter?error=sessiontimedout";
+//    } else {
+//      Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
+//      long id2 = user.getId();
+//      message.addAttribute("message", messageRepository.findAllByTimestampIsAfterOrderByTimestampDesc(lastLogin));
+//      model.addAttribute("user", user.getUsername());
+//      List<Message> finallist = new ArrayList<>();
+//      List<String> names = new ArrayList<>();
+//      for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
+//        if (names.contains(m.getUsername())) {
+//
+//        } else {
+//          names.add(m.getUsername());
+//          finallist.add(m);
+//        }
+//      }
+//      timestamp.addAttribute("timestamp", finallist);
+//      Long activelately = System.currentTimeMillis()-7200000;
+//      System.out.println("dkslfjsklddjflajdflkasjdflkj" + activelately);
+//      wroteMessage.addAttribute("activelately", activelately);
+//      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
+//      id.addAttribute("id", id2);
+//      if (error != null) {
+//        error = error.toUpperCase();
+//        message.addAttribute("error", ErrorMessages.valueOf(error).toString());
+//      }
+//      return "time";
+//    }
+//  }
+//
+//  @RequestMapping("/user")
+//  public String user(@RequestParam(value = "username") String username,
+//      @RequestParam(value = "error", required = false) String error, Model message,
+//      Model model, Model id, Model users, Model usermessages, Model timestamp, Model wroteMessage) {
+//    System.out.println(logic.getLogMessage("/"));
+//    if (logic.userTimeout(userRepository)) {
+//      return "redirect:/enter?error=sessiontimedout";
+//    } else {
+//      Felhasznalo user = userRepository.findFirstByOrderByLastActiveDesc();
+//      long id2 = user.getId();
+//      message.addAttribute("message",
+//          messageRepository.findAllByOrderByTimestampDesc());
+//      model.addAttribute("user", user.getUsername());
+//      users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
+//      usermessages.addAttribute("usermessages", messageRepository.findAllByUsernameOrderByTimestampDesc(username));
+//      List<Message> finallist = new ArrayList<>();
+//      List<String> names = new ArrayList<>();
+//      for (Message m : messageRepository.findAllByOrderByTimestampDesc()) {
+//        if (names.contains(m.getUsername())) {
+//
+//        } else {
+//          names.add(m.getUsername());
+//          finallist.add(m);
+//        }
+//      }
+//      timestamp.addAttribute("timestamp", finallist);
+//      Long activelately = System.currentTimeMillis()-7200000;
+//      System.out.println("dkslfjsklddjflajdflkasjdflkj" + activelately);
+//      wroteMessage.addAttribute("activelately", activelately);
+//      id.addAttribute("id", id2);
+//      if (error != null) {
+//        error = error.toUpperCase();
+//        message.addAttribute("error", ErrorMessages.valueOf(error).toString());
+//      }
+//      return "user";
+//    }
+//  }
 
   @RequestMapping("/enter")
   public String register(@RequestParam(value = "error", required = false) String error,
@@ -193,7 +174,7 @@ public class MainController {
     if (userRepository.findFelhasznaloByUsername(username) != null) {
       lastLogin = userRepository.findFelhasznaloByUsername(username).getLastActive();
       logic.updateLastActive(userRepository, username);
-      return "redirect:/new";
+      return "redirect:/?login=login";
     }
     if (messageRepository.findAllByUsername(username) != null) {
       return "redirect:/enter?error=usernamealreadytaken";
