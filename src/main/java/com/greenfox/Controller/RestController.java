@@ -69,11 +69,14 @@ public class RestController {
         System.out.println("The message arrived back");
         return new ResponseEntity<>(statusOk, HttpStatus.OK);
       }
+      if (incomingMessage.getMessage() == messageRepository.findOne(incomingMessage.getMessage().getId())) {
+        System.out.println("I already have this message");
+        return new ResponseEntity<>(statusOk, HttpStatus.OK);
+      }
       while (logic.checkId(messageRepository, incomingMessage.getMessage().getId())) {
         incomingMessage.getMessage().generateNewId();
       }
       messageRepository.save(incomingMessage.getMessage());
-//      restTemplate.postForObject(marci, incomingMessage, Status.class);
       restTemplate.postForObject(zsolt, incomingMessage, Status.class);
       return new ResponseEntity<>(statusOk, HttpStatus.OK);
     }
