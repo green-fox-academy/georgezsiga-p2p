@@ -23,4 +23,5 @@ public class ChatappApplication implements CommandLineRunner{
 //TODO max 10 message, arrows at bottom
 //TODO check for already arrived message... timestamp, text..
 //TODO filter
+//TOdO fix last login top of page
 
