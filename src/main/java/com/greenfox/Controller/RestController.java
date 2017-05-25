@@ -66,6 +66,7 @@ public class RestController {
     }
     if (logic.checkAllFields(incomingMessage).equals("ok")) {
       if (incomingMessage.getClient().getId().equals(System.getenv("CHAT_APP_UNIQUE_ID"))) {
+        System.out.println("The message arrived back");
         return new ResponseEntity<>(statusOk, HttpStatus.OK);
       }
       while (logic.checkId(messageRepository, incomingMessage.getMessage().getId())) {
