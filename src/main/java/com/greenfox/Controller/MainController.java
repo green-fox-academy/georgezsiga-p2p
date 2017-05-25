@@ -7,13 +7,13 @@ import com.greenfox.Model.Felhasznalo;
 import com.greenfox.Model.IncomingMessage;
 import com.greenfox.Model.Message;
 import com.greenfox.Model.StatusOk;
+import com.greenfox.Model.WhoToSend;
 import com.greenfox.Repository.MessageRepository;
 import com.greenfox.Repository.UserRepository;
 import com.greenfox.RequestLogger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.swing.JEditorPane;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class MainController {
 
   @RequestMapping("/")
   public String home(@RequestParam(value = "error", required = false) String error, HttpServletRequest request, Model message,
-      Model model, Model id, Model users, Model timestamp, Model wroteMessage) {
+      Model model, Model id, Model users, Model timestamp, Model wroteMessage, Model whotosend) {
     System.out.println(logic.getLogMessage("/"));
     requestLogger.info(request);
     if (logic.userTimeout(userRepository)) {
@@ -88,7 +88,7 @@ public class MainController {
       timestamp.addAttribute("timestamp", finallist);
       Long activelately = System.currentTimeMillis()-7200000;
       wroteMessage.addAttribute("activelately", activelately);
-
+//      whotosend.addAttribute("whotosend", WhoTo);
       users.addAttribute("users", messageRepository.findAllByOrderByTimestamp());
       id.addAttribute("id", id2);
       if (error != null) {
@@ -265,8 +265,7 @@ public class MainController {
     } catch (Exception e) {
       System.out.println("exception");
     }
-
-    restTemplate.postForObject(urlUser, incom, StatusOk.class);
+    restTemplate.postForObject(WhoToSend.valueOf(urlUser).getUrl(), incom, StatusOk.class);
     logic.updateLastActive(userRepository, id);
     return "redirect:/";
   }
