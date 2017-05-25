@@ -79,16 +79,7 @@
           <textarea name="message" title="message" rows="3" autocomplete="off" required="required"
                     placeholder="Type your message here"></textarea>
           <br/>
-          <button type="submit" class="btn btn-sm btn-success">send</button>
-        </form>
-      </div>
-        <div class="sidebar-module sidebar-module-inset">
-          <h4>New Destination</h4>
-          Who do you want to send the messages?
-          <form action="/newdestinationform" method="post" enctype="application/x-www-form-urlencoded">
-            <!--<input name="message" type="text" title="url" autocomplete="off" required="required"-->
-                      <!--placeholder="Send to.."/>-->
-            <br/>
+          Who do you want to send the message?
             <select title="urlUser" name="select">
               <option value="viktor">Viktor</option>
               <option value="patrik">Patrik</option>
@@ -96,10 +87,9 @@
               <option value="nora">Nora</option>
               <option value="zsolt">Zsolt</option>
             </select>
-
-            <button type="submit" class="btn btn-sm btn-success">set new destination</button>
-          </form>
-        </div>
+          <button type="submit" class="btn btn-sm btn-success">send</button>
+        </form>
+      </div>
       <div class="sidebar-module">
         <h4>Users</h4>
         <span class="glyphicon glyphicon-record" style="color: green" aria-hidden="true"></span> - active (past 2 hours)

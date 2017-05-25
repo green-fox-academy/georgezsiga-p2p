@@ -66,8 +66,8 @@ public class RestController {
         incomingMessage.getMessage().generateNewId();
       }
       messageRepository.save(incomingMessage.getMessage());
-      restTemplate.postForObject(zsolt, incomingMessage, StatusOk.class);
       restTemplate.postForObject(marci, incomingMessage, StatusOk.class);
+      restTemplate.postForObject(zsolt, incomingMessage, StatusOk.class);
       statusOk = new StatusOk();
       return new ResponseEntity<>(statusOk, HttpStatus.OK);
     }

@@ -99,8 +99,6 @@ public class MainController {
     }
   }
 
-
-
   @RequestMapping("/new")
   public String sinceLastLogin(@RequestParam(value = "time", required = false) String error, Model message,
       Model model, Model id, Model users, Model wroteMessage, Model timestamp) {
@@ -245,8 +243,11 @@ public class MainController {
 
   @RequestMapping("/newmessageform")
   public String newMessageForm(@RequestParam(value = "message", required = false) String message,
-      @RequestParam(value = "id") long id) {
+      @RequestParam(value = "id") long id, @RequestParam(value = "select", required = false) String urlUser) {
     System.out.println(logic.getLogMessage("/newmessageform"));
+    if (urlUser == null) {
+      return "redirect:/?error=nourluser";
+    }
     if (message.equals("")) {
       return "redirect:/?error=nomessage";
     }
@@ -265,19 +266,9 @@ public class MainController {
       System.out.println("exception");
     }
 
-    restTemplate.postForObject(System.getenv("SEND_TO"), incom, StatusOk.class);
+    restTemplate.postForObject(urlUser, incom, StatusOk.class);
     logic.updateLastActive(userRepository, id);
     return "redirect:/";
   }
 
-  @RequestMapping("/newdestinationform")
-  public String newDestinationForm(@RequestParam(value = "select", required = false) String urlUser) {
-    System.out.println(urlUser);
-    System.out.println(logic.getLogMessage("/newdestinationform"));
-    if (urlUser == null) {
-      return "redirect:/?error=nourluser";
-    }
-    System.getenv().put("SEND_TO", urlUser);
-    return "redirect:/";
-  }
 }
