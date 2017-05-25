@@ -73,7 +73,7 @@ public class RestController {
       }
       messageRepository.save(incomingMessage.getMessage());
       restTemplate.postForObject(marci, incomingMessage, Status.class);
-      restTemplate.postForObject(zsolt, incomingMessage, Status.class);
+//      restTemplate.postForObject(zsolt, incomingMessage, Status.class);
       return new ResponseEntity<>(statusOk, HttpStatus.OK);
     }
     statusError = new StatusError(logic.checkAllFields(incomingMessage));
