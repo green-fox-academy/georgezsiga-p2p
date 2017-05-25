@@ -11,6 +11,7 @@ public enum WhoToSend {
   NORA("nora", "https://peertopeerchat.herokuapp.com/api/message/receive"),
   ZSOLT("zsolt", "https://p2p-by-nagyza.herokuapp.com/api/message/receive"),
   MILAN("milan", "https://p2pchat-garlyle.herokuapp.com/api/message/receive"),
+  PETER("peter", "https://sleepy-harbor-14996.herokuapp.com/api/message/receive"),
   MARCI("marci", "https://p2p-chat-seed0forever.herokuapp.com/api/message/receive");
 
   public final String name;
