@@ -34,8 +34,8 @@
 <div class="blog-masthead">
   <div class="container">
     <nav class="blog-nav">
-      <form action="/updateform" method="post" enctype="application/x-www-form-urlencoded"><a
-          class="blog-nav-item active" href="/">Home</a>
+      <form action="/updateform" method="post" enctype="application/x-www-form-urlencoded">
+        <a class="blog-nav-item active" href="/">Home</a>
         <a class="blog-nav-item" href="/enter">Log in with other user</a>
         Your Username: <input title="username" type="text" name="username" th:placeholder="${user}"
                               autocomplete="off" required="required"/><input title="id"
@@ -55,7 +55,7 @@
       <h3 th:text="${error}" class="red"></h3>
       <h3>Previous messages</h3>
       <hr/>
-      <div class="blog-post" th:each="m : ${message}">
+      <div class="blog-post" th:each="m : ${message}" th:if="${m.getTimestamp().getTime() &lt; timenow}">
         <p th:text="'Message: ' + ${m.getText()}" style="word-wrap: break-word"></p>
         <p class="blog-post-meta"><span th:text="${m.getTimestamp()}"></span> by <a
             th:href="'/user?username=' + ${m.getUsername()}">
@@ -85,6 +85,7 @@
               <option value="PATRIK">Patrik</option>
               <option value="RAMIN">Ramin</option>
               <option value="NORA">Nora</option>
+              <option value="PETER">Peter</option>
               <option value="ZSOLT">Zsolt</option>
               <option value="MARCI">Marci</option>
               <option value="MILAN">Milan</option>
@@ -94,11 +95,13 @@
       </div>
       <div class="sidebar-module">
         <h4>Users</h4>
-        <span class="glyphicon glyphicon-record" style="color: green" aria-hidden="true"></span> - active (past 2 hours)
+        <span class="glyphicon glyphicon-record" style="color: green" aria-hidden="true"></span> - active (past 2 hours)<br/>
+        <span class="glyphicon glyphicon-hourglass" style="color: green" aria-hidden="true"></span> - future messages
         <ol class="list-unstyled" th:each="t : ${timestamp}">
           <li><a th:href="'/user?username=' + ${t.getUsername()}">
             <button type="button" class="btn btn-xs btn-primary" th:text="${t.getUsername()}"></button>
-            <span th:if="${t.getTimestamp().getTime() &gt;  activelately}" th:class="'glyphicon glyphicon-record'" th:style="'color: green'" aria-hidden="true"></span>
+            <span th:if="${t.getTimestamp().getTime() &gt;  activelately and t.getTimestamp().getTime() &lt; timenow}" th:class="'glyphicon glyphicon-record'" th:style="'color: green'" aria-hidden="true"></span>
+            <span th:if="${t.getTimestamp().getTime() &gt; timenow}" th:class="'glyphicon glyphicon-hourglass'" th:style="'color: blue'" aria-hidden="true"></span>
           </a></li>
         </ol>
       </div>
