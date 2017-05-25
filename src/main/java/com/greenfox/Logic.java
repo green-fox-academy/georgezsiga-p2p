@@ -90,7 +90,9 @@ public class Logic {
 
       } else {
         names.add(m.getUsername());
+        if (finallist.size() <= 25) {
         finallist.add(m);
+        }
       }
     }
     return finallist;
