@@ -58,7 +58,7 @@ public class MainController {
       @RequestParam(value = "login", required = false) String login,
       @RequestParam(value = "user", required = false) String username,
       HttpServletRequest request,
-      Model messages, Model model, Model id, Model userlist, Model wroteMessage, Model timenow, Model errormessage) {
+      Model messages, Model model, Model activeuser, Model id, Model userlist, Model wroteMessage, Model timenow, Model errormessage) {
     System.out.println(logic.getLogMessage("/"));
     requestLogger.info(request);
     Felhasznalo felhasznalo = userRepository.findFirstByOrderByLastActiveDesc();
@@ -82,6 +82,7 @@ public class MainController {
     userlist.addAttribute("userlist", logic.findDistinctUsernamesFromMessages(messageRepository));
     wroteMessage.addAttribute("activelately", System.currentTimeMillis()-7200000);
     id.addAttribute("id", id2);
+    activeuser.addAttribute("user", felhasznalo.getUsername());
     return "index";
   }
 
