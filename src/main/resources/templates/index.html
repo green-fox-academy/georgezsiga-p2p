@@ -92,7 +92,7 @@
         <ol class="list-unstyled" th:each="t : ${userlist}">
           <li><a th:href="'/?user=' + ${t.getUsername()}">
             <button type="button" class="btn btn-xs btn-primary" th:text="${t.getUsername()}"></button>
-            <span th:if="${t.getTimestamp().getTime() &gt;  activelately }" th:class="'glyphicon glyphicon-record'" th:style="'color: green'" aria-hidden="true"></span>
+            <span th:if="${t.getTimestamp().getTime() &gt;  activelately and t.getTimestamp().getTime() &lt; timenow}" th:class="'glyphicon glyphicon-record'" th:style="'color: green'" aria-hidden="true"></span>
             <span th:if="${t.getTimestamp().getTime() &gt; timenow}" th:class="'glyphicon glyphicon-hourglass'" th:style="'color: blue'" aria-hidden="true"></span>
           </a></li>
         </ol>
