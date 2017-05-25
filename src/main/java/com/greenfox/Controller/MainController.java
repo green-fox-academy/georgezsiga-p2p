@@ -58,7 +58,7 @@ public class MainController {
       @RequestParam(value = "login", required = false) String login,
       @RequestParam(value = "user", required = false) String username,
       HttpServletRequest request,
-      Model messages, Model model, Model id, Model users, Model timestamp, Model wroteMessage, Model timenow, Model errormessage) {
+      Model messages, Model model, Model id, Model users, Model userlist, Model wroteMessage, Model timenow, Model errormessage) {
     System.out.println(logic.getLogMessage("/"));
     requestLogger.info(request);
     Felhasznalo felhasznalo = userRepository.findFirstByOrderByLastActiveDesc();
@@ -66,23 +66,22 @@ public class MainController {
     if (logic.userTimeout(userRepository)) {
       return "redirect:/enter?error=sessiontimedout";
     }
-    messages.addAttribute("messages", messageRepository.findAllByOrderByTimestampDesc());
+//    messages.addAttribute("messages", messageRepository.findAllByOrderByTimestampDesc());
     messages.addAttribute("messages", messageRepository.findTop10ByOrderByTimestampDesc());
     if (error != null) {
       error = error.toUpperCase();
       errormessage.addAttribute("error", ErrorMessages.valueOf(error).toString());
     }
     if (login != null) {
-      messages.addAttribute("messages", messageRepository.findAllByTimestampIsAfterOrderByTimestampDesc(felhasznalo.getLastActive()));
+      messages.addAttribute("messages", messageRepository.findAllByTimestampIsAfterOrderByTimestampDesc(lastLogin));
     }
     if (username != null) {
       messages.addAttribute("messages", messageRepository.findAllByUsernameOrderByTimestampDesc(username));
     }
     timenow.addAttribute("timenow", System.currentTimeMillis());
     model.addAttribute("user", felhasznalo.getUsername());
-    timestamp.addAttribute("timestamp", logic.findDistinctUsernamesFromMessages(messageRepository));
+    userlist.addAttribute("userlist", logic.findDistinctUsernamesFromMessages(messageRepository));
     wroteMessage.addAttribute("activelately", System.currentTimeMillis()-7200000);
-//    users.addAttribute("users", messageRepository.findTop25ByOrderByTimestamp());
     id.addAttribute("id", id2);
     return "index";
   }

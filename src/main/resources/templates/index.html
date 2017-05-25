@@ -89,7 +89,7 @@
         <h4>Users</h4>
         <span class="glyphicon glyphicon-record" style="color: green" aria-hidden="true"></span> - active (past 2 hours)<br/>
         <span class="glyphicon glyphicon-hourglass" style="color: blue" aria-hidden="true"></span> - future messages
-        <ol class="list-unstyled" th:each="t : ${timestamp}">
+        <ol class="list-unstyled" th:each="t : ${userlist}">
           <li><a th:href="'/?user=' + ${t.getUsername()}">
             <button type="button" class="btn btn-xs btn-primary" th:text="${t.getUsername()}"></button>
             <span th:if="${t.getTimestamp().getTime() &gt;  activelately and t.getTimestamp().getTime() &lt; timenow}" th:class="'glyphicon glyphicon-record'" th:style="'color: green'" aria-hidden="true"></span>
