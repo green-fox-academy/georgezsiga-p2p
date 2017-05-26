@@ -30,5 +30,6 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
     compile ('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile (group: 'org.webjars', name: 'bootstrap', version: '3.3.7-1')
+	compile ('com.squareup.retrofit2:converter-jackson:2.3.0')
 	compile (group: 'org.webjars.bower', name: 'jquery', version: '3.2.1')
 }
