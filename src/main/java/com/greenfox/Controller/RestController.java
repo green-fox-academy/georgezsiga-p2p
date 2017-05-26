@@ -82,11 +82,11 @@ public class RestController {
   }
 
   @GetMapping("/api/messages")
-  public ResponseEntity<?> receiveFromApp() {
+  public MessageResponse receiveFromApp() {
     MessageResponse messageResponse = new MessageResponse();
     messageResponse.setMessages(messageRepository.findAllByOrderByTimestampDesc());
     messageResponse.getClient().setId("CHAT_APP_UNIQUE_ID");
-    return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+    return messageResponse;
   }
 
 
