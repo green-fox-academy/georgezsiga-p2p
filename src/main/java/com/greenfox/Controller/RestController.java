@@ -5,6 +5,7 @@ import com.greenfox.Logic;
 import com.greenfox.Model.Client;
 import com.greenfox.Model.IncomingMessage;
 import com.greenfox.Model.Message;
+import com.greenfox.Model.MessageResponse;
 import com.greenfox.Model.Status;
 import com.greenfox.Model.StatusError;
 import com.greenfox.Model.StatusOk;
@@ -69,10 +70,6 @@ public class RestController {
         System.out.println("The message arrived back");
         return new ResponseEntity<>(statusOk, HttpStatus.OK);
       }
-      if (incomingMessage.getMessage() == messageRepository.findOne(incomingMessage.getMessage().getId())) {
-        System.out.println("I already have this message");
-        return new ResponseEntity<>(statusOk, HttpStatus.OK);
-      }
       while (logic.checkId(messageRepository, incomingMessage.getMessage().getId())) {
         incomingMessage.getMessage().generateNewId();
       }
@@ -83,4 +80,14 @@ public class RestController {
     statusError = new StatusError(logic.checkAllFields(incomingMessage));
     return new ResponseEntity<>(statusError, HttpStatus.BAD_REQUEST);
   }
+
+  @GetMapping("/api/messages")
+  public ResponseEntity<?> receiveFromApp() {
+    MessageResponse messageResponse = new MessageResponse();
+    messageResponse.setMessages(messageRepository.findAllByOrderByTimestampDesc());
+    messageResponse.getClient().setId("CHAT_APP_UNIQUE_ID");
+    return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+  }
+
+
 }
