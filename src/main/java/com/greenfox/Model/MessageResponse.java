@@ -13,6 +13,11 @@ public class MessageResponse {
   public MessageResponse() {
   }
 
+  public MessageResponse(List<Message> messages, String id) {
+    this.messages = messages;
+    this.client = new Client(id);
+  }
+
   public MessageResponse(List<Message> messages, Client client) {
     this.messages = messages;
     this.client = client;
